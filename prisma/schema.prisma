@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// model Post {
+//   id        String      @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   title     String   
+//   content   String
+//   adm Boolean  @default(false)
+// }
+
+model UserEmpresa{
+  id  String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  razaoSocial String
+  fantasia String
+  cnpj String @unique
+  ie String @unique @db.Char(16)
+  email String @unique
+  senha String
+  confirmarSenha String
+}
+
+model UserCandidato{
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  nome String
+  sobrenome String
+  email String @unique
+  dataNascimento String
+  cpf String @unique
+  senha String
+  confirmarSenha String
+}
