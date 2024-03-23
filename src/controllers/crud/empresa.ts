@@ -11,8 +11,7 @@ async function CreateEmpresa(req: Request, res: Response) {
         cnpj,
         ie,
         email,
-        senha,
-        confirmarSenha} = req.body;
+        senha} = req.body;
 
         const createdEmpresa = await UserEmpresa.userEmpresa.create({
             data: {
@@ -21,8 +20,7 @@ async function CreateEmpresa(req: Request, res: Response) {
                 cnpj: cnpj,
                 ie: ie,
                 email: email,
-                senha: senha,
-                confirmarSenha: confirmarSenha
+                senha: senha
             }
         })
 

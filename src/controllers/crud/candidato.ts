@@ -6,47 +6,36 @@ const Candidato = new PrismaClient()
 
 //criar candidato
 async function createCandidato(req: Request, res: Response) {
-
         const {
             nome,
             sobrenome,
             email,
             dataNascimento,
             cpf,
-            senha,
-            confirmarSenha
+            senha
         } = req.body;
-
         //criptografa a senha, usando a biblioteca bcrypt
         const senhaCriptografada = await bcrypt .hash(senha, 10);
         
-            const usuarioExistente = await Candidato.userCandidato.findUnique({
-              where: {
-                cpf: cpf,
-              },
-            });
-            
+            const usuarioExistente = await Candidato.userCandidato.findUnique({where: {cpf}});            
 //se o usuario não existe vai criar, se existe vai dar erro e mostrar o cpf
-          if(!usuarioExistente){
-            const createdCandidato = await Candidato.userCandidato.create({
-                data:{
-                    nome: nome,
-                    sobrenome: sobrenome,
-                    email: email,
-                    dataNascimento: dataNascimento,
-                    cpf: cpf,
-                    senha: senhaCriptografada,
-                    confirmarSenha: confirmarSenha
-                }
-            }
-            )
+        if(!usuarioExistente){
+                const createdCandidato = await Candidato.userCandidato.create({
+                    data:{
+                        nome: nome,
+                        sobrenome: sobrenome,
+                        email: email,
+                        dataNascimento: dataNascimento,
+                        cpf: cpf,
+                        senha: senhaCriptografada
+                    }
+                })
             res.status(201).json(createdCandidato);            
-        }
-        else{
-            res.status(400).send(`Usuario com esse cpf: ${cpf} já existe!`)
-        }
+            } else {
+                res.status(400).send(`Usuario com esse cpf: ${cpf} já existe!`)
+            }
     }        
-//criptografar e validar a senha
+//validar a senha
 async function isValid(req: Request, res: Response) {
     const {
         email,
@@ -72,7 +61,7 @@ async function UpdateCandidato(req: Request, res: Response) {
         {where: {
             email:'mateusramalho@gmail.com'
         },
-        data:{
+        data:{ //arquivo a ser atualizado, tem que estar na req.body
             nome: nome,
         }}
         )
@@ -85,32 +74,35 @@ async function findAllCandidatos(req: Request, res: Response) {
     res.status(200).json(candidatos) 
 }
 
-//encontrar pelo id
+//encontrar pelo params pedido
 async function findOneCandidato(req: Request, res: Response) {
-    const candidato = await Candidato.userCandidato.findUnique({where: {id: "611c3ebf-2ce3-42c0-8cb9-c78f578e3481"}})
-    res.status(200).json(candidato)    
+    const {cpf} = req.params;
+    if(!cpf){
+        return res.status(200).end("Digite um cpf valido!");
+    }
+    const usuarioExistente = await Candidato.userCandidato.findUnique({where: {cpf}});
+            if(!usuarioExistente){
+                res.status(404).send(`Usuario com esse cpf: ${cpf} não existe!`);           
+          }
+          else{
+            const candidato = await Candidato.userCandidato.findUnique({where: {cpf}});
+            res.status(200).json(usuarioExistente);
+          }              
 }
-
 //deletar
 async function deleteCandidato(req: Request, res: Response) {
     const {cpf} = req.params;
-
     //verificar se esta correto o cpf
     if(!cpf){
-        res.status(200).end("Digite um cpf valido!");
+        return res.status(200).end("Digite um cpf valido!");
     }
-
-    const usuarioExistente = await Candidato.userCandidato.findUnique({
-        where: {
-          cpf: cpf,
-        },
-      });
-    if(!usuarioExistente){
-        res.status(404).send(`Usuario com esse cpf: ${cpf} não existe!`)           
-  }
-  else{
-      const candidato = await Candidato.userCandidato.delete({where: {cpf : cpf}})
-      res.status(200).end("usuario deletado");
+    const usuarioExistente = await Candidato.userCandidato.findUnique({where: {cpf}});
+        if(!usuarioExistente){
+                res.status(404).send(`Usuario com esse cpf: ${cpf} não existe!`);           
+            }
+        else{
+    const candidato = await Candidato.userCandidato.delete({where: {cpf}})
+    res.status(200).end("usuario deletado");
   }   
 }
 

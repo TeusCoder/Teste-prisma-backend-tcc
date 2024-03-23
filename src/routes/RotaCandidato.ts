@@ -8,7 +8,7 @@ route.post("/", createCandidato)
 // route.post("/teste", isValid)
 route.put("/update", UpdateCandidato)
 route.get("/findAll", findAllCandidatos)
-route.get("/findOne",findOneCandidato)
-route.delete("/delete?:cpf", deleteCandidato)
+route.get("/findOne/:cpf",findOneCandidato)
+route.delete("/delete/:cpf", deleteCandidato)
 
 export default route

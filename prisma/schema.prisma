@@ -26,7 +26,6 @@ model UserEmpresa{
   ie String @unique @db.Char(16)
   email String @unique
   senha String
-  confirmarSenha String
 }
 
 model UserCandidato{
@@ -39,5 +38,4 @@ model UserCandidato{
   dataNascimento String
   cpf String @unique
   senha String
-  confirmarSenha String
 }
