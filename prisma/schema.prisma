@@ -38,4 +38,31 @@ model UserCandidato{
   dataNascimento String
   cpf String @unique
   senha String
+ // candidatoVaga CandidatoVaga[]
 }
+
+// model Curriculo_form {
+//   id_curriculoForm String @id @default(uuid())
+//   escolaridade String
+//   experienciasAnt String
+//   competenciasExtracurricular String
+//   certificacoes String
+// }
+
+// model CandidatoVaga{
+//   id_inscricao String @id @default(uuid())
+//   candidatoId String @unique
+//   candidato UserCandidato @relation(fields: [candidatoId], references: [id_userCandidato])
+//   vagaId String @unique
+//   vaga Vaga @relation(fields: [vagaId], references: [id_vaga])
+//   dataInscricao String
+// }
+
+// model Vaga{
+//   id_vaga String @id @default(uuid())
+//   dataAbertura String
+//   dataFechamento String
+//   descricao String
+//   requisitos String
+//   CandidatoVaga CandidatoVaga[]
+// }
