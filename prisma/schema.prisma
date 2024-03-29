@@ -7,62 +7,95 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model Post {
-//   id        String      @id @default(uuid())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   title     String   
-//   content   String
-//   adm Boolean  @default(false)
-// }
-
 model UserEmpresa{
-  id  String @id @default(uuid())
+  id_userEmpresa  String @id @default(uuid())
+  enderecoId String @unique
+  endereco Endereco @relation(fields: [enderecoId], references: [id_endereco])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  razaoSocial String
-  fantasia String
-  cnpj String @unique
+  razaoSocial String @db.Char(100)
+  nome_fantasia String @db.Char(100)
+  cnpj String @unique @db.Char(14)
   ie String @unique @db.Char(16)
-  email String @unique
+  telefone String @db.Char(11)
+  email String @unique @db.Char(100)
   senha String
+  CriaVaga CriarVaga[]
 }
 
 model UserCandidato{
-  id String @id @default(uuid())
+  id_userCandidato String @id @default(uuid())
+  enderecoId String @unique  
+  endereco Endereco @relation(fields: [enderecoId], references: [id_endereco])
+  curriculoId String @unique 
+  curriculo_form Curriculo_form @relation(fields: [curriculoId], references: [id_curriculoForm])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  nome String
-  sobrenome String
-  email String @unique
-  dataNascimento String
-  cpf String @unique
+  nome String @db.Char(100) 
+  sobrenome String @db.Char(100)
+  cpf String @unique @db.Char(11)
+  dataNascimento String 
+  email String @unique @db.Char(100)
+  telefone String @db.Char(11)
+  curriculo_anexo String @db.LongText
   senha String
- // candidatoVaga CandidatoVaga[]
+  candidatoVaga CandidatoVaga[]
 }
 
-// model Curriculo_form {
-//   id_curriculoForm String @id @default(uuid())
-//   escolaridade String
-//   experienciasAnt String
-//   competenciasExtracurricular String
-//   certificacoes String
-// }
+model Curriculo_form {
+  id_curriculoForm String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  escolaridade String @db.Char(100)
+  experienciasAnt String @db.LongText
+  competenciasExtracurricular String @db.LongText
+  certificacoes String @db.LongText
+  userCandidato UserCandidato []
+}
 
-// model CandidatoVaga{
-//   id_inscricao String @id @default(uuid())
-//   candidatoId String @unique
-//   candidato UserCandidato @relation(fields: [candidatoId], references: [id_userCandidato])
-//   vagaId String @unique
-//   vaga Vaga @relation(fields: [vagaId], references: [id_vaga])
-//   dataInscricao String
-// }
+model CandidatoVaga{
+  id_inscricao String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  candidatoId String @unique
+  candidato UserCandidato @relation(fields: [candidatoId], references: [id_userCandidato])
+  vagaId String @unique
+  vaga Vaga @relation(fields: [vagaId], references: [id_vaga])
+  dataInscricao String
+}
 
-// model Vaga{
-//   id_vaga String @id @default(uuid())
-//   dataAbertura String
-//   dataFechamento String
-//   descricao String
-//   requisitos String
-//   CandidatoVaga CandidatoVaga[]
-// }
+model Vaga{
+  id_vaga String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  dataAbertura String
+  dataFechamento String
+  descricao String @db.LongText
+  requisitos String @db.LongText
+  CandidatoVaga CandidatoVaga[]
+  CriaVaga CriarVaga[]
+}
+
+model CriarVaga {
+  id_criaVaga String @id @default(uuid())
+  EmpresaId String @unique
+  Empresa UserEmpresa @relation(fields: [EmpresaId], references: [id_userEmpresa])
+  VagaId String @unique
+  Vaga Vaga @relation(fields: [VagaId], references: [id_vaga])
+  dataCriacao String
+}
+
+model Endereco {
+  id_endereco String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  pais String @db.Char(100)
+  estado String @db.Char(2)
+  cidade String @db.Char(100)
+  bairro String @db.Char(100)
+  logradouro String @db.Char(100)
+  numero String  @db.Char(10)
+  cep String @db.Char(10) 
+  UserCandidato UserCandidato[]
+  UserEmpresa UserEmpresa[]
+}
