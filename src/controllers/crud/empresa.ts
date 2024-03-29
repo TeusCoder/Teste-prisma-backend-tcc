@@ -21,34 +21,34 @@ async function CreateEmpresa(req: Request, res: Response) {
 
     const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { cnpj } });
 
-    if (!usuarioExistente) {
-        const createdEmpresa = await Empresa.userEmpresa.create({
-            data: {
-                razaoSocial: razaoSocial,
-                fantasia: fantasia,
-                cnpj: cnpj,
-                ie: ie,
-                email: email,
-                senha: senhaCriptografada
-            }
-        })
-        res.status(201).json(createdEmpresa)
+    // if (!usuarioExistente) {
+    //     const createdEmpresa = await Empresa.userEmpresa.create({
+    //         data: {
+    //             razaoSocial: razaoSocial,
+    //             fantasia: fantasia,
+    //             cnpj: cnpj,
+    //             ie: ie,
+    //             email: email,
+    //             senha: senhaCriptografada
+    //         }
+    //     })
+    //     res.status(201).json(createdEmpresa)
 
-    } else {
-        res.status(400).send(`Usuario com esse cpf: ${cnpj} já existe!`)
-    }
+    // } else {
+    //     res.status(400).send(`Usuario com esse cpf: ${cnpj} já existe!`)
+    // }
 }
 
 async function UpdateEmpresa(req: Request, res: Response) {
     const { fantasia } = req.body;
-    const EmpresaUpdated = await Empresa.userEmpresa.update(
-        {
-            where: {
-                email: 'superTintas@gmail.com'
-            },
-            data: { fantasia: fantasia }
-        })
-    res.status(200).json(EmpresaUpdated)
+    // const EmpresaUpdated = await Empresa.userEmpresa.update(
+    //     {
+    //         where: {
+    //             email: 'superTintas@gmail.com'
+    //         },
+    //         data: { fantasia: fantasia }
+    //     })
+    // res.status(200).json(EmpresaUpdated)
 }
 
 async function findAllEmpresas(req: Request, res: Response) {

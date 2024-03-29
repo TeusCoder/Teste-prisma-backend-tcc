@@ -2,6 +2,23 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 
+// id_userCandidato String @id @default(uuid())
+// enderecoId String @unique  
+// endereco Endereco @relation(fields: [enderecoId], references: [id_endereco])
+// curriculoId String @unique 
+// curriculo_form Curriculo_form @relation(fields: [curriculoId], references: [id_curriculoForm])
+// createdAt DateTime @default(now())
+// updatedAt DateTime @updatedAt
+// nome String @db.Char(100) 
+// sobrenome String @db.Char(100)
+// cpf String @unique @db.Char(11)
+// dataNascimento String 
+// email String @unique @db.Char(100)
+// telefone String @db.Char(11)
+// curriculo_anexo String @db.LongText
+// senha String
+// candidatoVaga CandidatoVaga[]
+
 const Candidato = new PrismaClient()
 
 //criar candidato
@@ -18,22 +35,22 @@ async function createCandidato(req: Request, res: Response) {
     const senhaCriptografada = await bcrypt.hash(senha, 10);
 
     const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { cpf } });
-    //se o usuario não existe vai criar, se existe vai dar erro e mostrar o cpf
-    if (!usuarioExistente) {
-        const createdCandidato = await Candidato.userCandidato.create({
-            data: {
-                nome: nome,
-                sobrenome: sobrenome,
-                email: email,
-                dataNascimento: dataNascimento,
-                cpf: cpf,
-                senha: senhaCriptografada
-            }
-        })
-        res.status(201).json(createdCandidato);
-    } else {
-        res.status(400).send(`Usuario com esse cpf: ${cpf} já existe!`)
-    }
+    // se o usuario não existe vai criar, se existe vai dar erro e mostrar o cpf
+    // if (!usuarioExistente) {
+    //     const createdCandidato = await Candidato.userCandidato.create({
+    //         data: {
+    //             nome: nome,
+    //             sobrenome: sobrenome,
+    //             email: email,
+    //             dataNascimento: dataNascimento,
+    //             cpf: cpf,
+    //             senha: senhaCriptografada
+    //         }
+    //     })
+    //     res.status(201).json(createdCandidato);
+    // } else {
+    //     res.status(400).send(`Usuario com esse cpf: ${cpf} já existe!`)
+    // }
 }
 //validar a senha
 async function isValid(req: Request, res: Response) {
