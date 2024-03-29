@@ -1,5 +1,6 @@
-<!-- -- criar as tabelas do banco de dados ok
--- ajeitar bd -->
+atualizar crud
+criar primeiro as dependencias (chaves estrangeiras), depois criar o principal
+
 
 <!-- sempre que mudar algo no controller, verificar se esta não dara errro na rota -->
 
