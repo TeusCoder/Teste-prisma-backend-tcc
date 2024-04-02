@@ -9,8 +9,8 @@ datasource db {
 
 model UserEmpresa{
   id_userEmpresa  String @id @default(uuid())
-  enderecoId String @unique
-  endereco Endereco @relation(fields: [enderecoId], references: [id_endereco])
+  id_endereco String @unique
+  endereco Endereco @relation(fields: [id_endereco], references: [id_endereco])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   razaoSocial String @db.Char(100)
@@ -25,10 +25,10 @@ model UserEmpresa{
 
 model UserCandidato{
   id_userCandidato String @id @default(uuid())
-  enderecoId String @unique  
-  endereco Endereco @relation(fields: [enderecoId], references: [id_endereco])
-  curriculoId String @unique 
-  curriculo_form Curriculo_form @relation(fields: [curriculoId], references: [id_curriculoForm])
+  id_endereco String @unique  
+  endereco Endereco @relation(fields: [id_endereco], references: [id_endereco])
+  id_curriculoForm String @unique 
+  curriculo_form Curriculo_form @relation(fields: [id_curriculoForm], references: [id_curriculoForm])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   nome String @db.Char(100) 
@@ -57,10 +57,10 @@ model CandidatoVaga{
   id_inscricao String @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  candidatoId String @unique
-  candidato UserCandidato @relation(fields: [candidatoId], references: [id_userCandidato])
-  vagaId String @unique
-  vaga Vaga @relation(fields: [vagaId], references: [id_vaga])
+  id_userCandidato String @unique
+  candidato UserCandidato @relation(fields: [id_userCandidato], references: [id_userCandidato])
+  id_vaga String @unique
+  vaga Vaga @relation(fields: [id_vaga], references: [id_vaga])
   dataInscricao String
 }
 
@@ -78,10 +78,10 @@ model Vaga{
 
 model CriarVaga {
   id_criaVaga String @id @default(uuid())
-  EmpresaId String @unique
-  Empresa UserEmpresa @relation(fields: [EmpresaId], references: [id_userEmpresa])
-  VagaId String @unique
-  Vaga Vaga @relation(fields: [VagaId], references: [id_vaga])
+  id_userEmpresa String @unique
+  Empresa UserEmpresa @relation(fields: [id_userEmpresa], references: [id_userEmpresa])
+  id_vaga String @unique
+  Vaga Vaga @relation(fields: [id_vaga], references: [id_vaga])
   dataCriacao String
 }
 
