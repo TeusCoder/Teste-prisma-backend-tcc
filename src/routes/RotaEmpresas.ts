@@ -4,7 +4,7 @@ import { CreateEmpresa, deleteEmpresa, findAllEmpresas, findOneEmpresa, UpdateEm
 const route = Router();
 
 route.post("/", CreateEmpresa)
-route.put("/update", UpdateEmpresa)
+route.put("/update/:cnpj", UpdateEmpresa)
 route.get("/findAll", findAllEmpresas)
 route.get("/findOne/:cnpj",findOneEmpresa)
 route.delete("/delete/:cnpj", deleteEmpresa)
