@@ -1,0 +1,9 @@
+# mysql é o tipo de banco que sera usado
+# root é o usuario que vai entrar
+# :senha -> a senha que é usada para entrar no usuario
+# localhost é a porta que o banco esta rodando 
+# /nome do schema que sera utilizado junto ao banco
+DATABASE_URL="mysql://root:1234@localhost:3306/new_schema"
+
+# port que o server esta rodando
+PORT=3000
