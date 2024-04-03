@@ -6,6 +6,7 @@ import RouterCandidatos from './routes/RotaCandidato'
 import RouterEndereco from './routes/rotaEndereco'
 import RouterVaga from './routes/RotaVaga'
 import RouterCurriculo from './routes/RotaCurriculo'
+import RouterInscricoes from './routes/RotaInscricaoCandidatoVaga'
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use("/candidatos", RouterCandidatos)
 app.use("/enderecos", RouterEndereco)
 app.use("/vagas", RouterVaga)
 app.use("/curriculos", RouterCurriculo)
+app.use("/inscricoes", RouterInscricoes)
 
 app.listen(process.env.PORT, () => {
     console.log(`escutando na porta ${process.env.PORT}`)
