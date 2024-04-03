@@ -1,19 +1,5 @@
-// id_userEmpresa  String @id @default(uuid())
-// id_endereco String @unique
-// endereco Endereco @relation(fields: [id_endereco], references: [id_endereco])
-// createdAt DateTime @default(now())
-// updatedAt DateTime @updatedAt
-// razaoSocial String @db.Char(100)
-// nome_fantasia String @db.Char(100)
-// cnpj String @unique @db.Char(14)
-// ie String @unique @db.Char(16)
-// telefone String @db.Char(11)
-// email String @unique @db.Char(100)
-// senha String
-// CriaVaga CriarVaga[]
-
 import { PrismaClient } from "@prisma/client";
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 
 const Empresa = new PrismaClient()
