@@ -1,6 +1,3 @@
-atualizar crud
-criar primeiro as dependencias (chaves estrangeiras), depois criar o principal
-
 
 <!-- sempre que mudar algo no controller, verificar se esta não dara errro na rota -->
 
@@ -9,7 +6,7 @@ comandos no prisma
 mandar alterações do banco de dados (migrate)
 
 -- npx prisma migrate dev
--- npx prisma studio ()
+-- npx prisma studio
 
 função para validar a senha:
 /*
