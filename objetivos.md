@@ -1,4 +1,4 @@
-
+pegar curriculo por pdf
 <!-- sempre que mudar algo no controller, verificar se esta não dara errro na rota -->
 
 comandos no prisma
@@ -26,3 +26,7 @@ async function isValid(req: Request, res: Response) {
 
     res.status(200).send("compativel");
 }*/
+
+endereço
+cliente 
+empre
