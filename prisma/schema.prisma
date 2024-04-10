@@ -90,7 +90,7 @@ model Endereco {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   pais String @db.Char(100)
-  estado String @db.Char(2)
+  estado String @db.Char(5)
   cidade String @db.Char(100)
   bairro String @db.Char(100)
   logradouro String @db.Char(100)
