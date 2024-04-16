@@ -1,15 +1,4 @@
-// id_endereco String @id @default(uuid())
-// createdAt DateTime @default(now())
-// updatedAt DateTime @updatedAt
-// pais String @db.Char(100)
-// estado String @db.Char(2)
-// cidade String @db.Char(100)
-// bairro String @db.Char(100)
-// logradouro String @db.Char(100)
-// numero String @db.Char(10)
-// cep String @db.Char(10)
-// UserCandidato UserCandidato[]
-// UserEmpresa UserEmpresa[]
+
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 
@@ -103,7 +92,7 @@ async function deleteEndereco(req: Request, res: Response) {
         if(!id_endereco){
             res.status(400).send("Verifique o id na url");
         } else{
-        const EnderecoDeleted = await Endereco.endereco.delete({ where: { id_endereco } })
+         await Endereco.endereco.delete({ where: { id_endereco } })
         res.status(200).end("endereço deletado");
         }
     }
