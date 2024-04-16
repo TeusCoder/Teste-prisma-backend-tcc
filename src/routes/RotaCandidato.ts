@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCandidato, deleteCandidato,findAllCandidatos, findOneCandidato, isValid, UpdateCandidato } from "../controllers/crud/candidato";
+import { createCandidato, deleteCandidato,findAllCandidatos, findOneCandidato, UpdateCandidato } from "../controllers/crud/candidato";
 
 const route = Router();
 
