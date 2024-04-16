@@ -34,7 +34,7 @@ model UserCandidato{
   nome String @db.Char(100) 
   sobrenome String @db.Char(100)
   cpf String @unique @db.Char(11)
-  dataNascimento String 
+  dataNascimento DateTime 
   email String @unique @db.Char(100)
   telefone String @db.Char(11)
   curriculo_anexo String @db.LongText
@@ -61,15 +61,15 @@ model CandidatoVaga{
   candidato UserCandidato @relation(fields: [id_userCandidato], references: [id_userCandidato])
   id_vaga String @unique
   vaga Vaga @relation(fields: [id_vaga], references: [id_vaga])
-  dataInscricao String
+  dataInscricao DateTime
 }
 
 model Vaga{
   id_vaga String @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  dataAbertura String
-  dataFechamento String
+  dataAbertura DateTime
+  dataFechamento DateTime
   descricao String @db.LongText
   requisitos String @db.LongText
   CandidatoVaga CandidatoVaga[]
@@ -82,7 +82,7 @@ model CriarVaga {
   Empresa UserEmpresa @relation(fields: [id_userEmpresa], references: [id_userEmpresa])
   id_vaga String @unique
   Vaga Vaga @relation(fields: [id_vaga], references: [id_vaga])
-  dataCriacao String
+  dataCriacao DateTime
 }
 
 model Endereco {
