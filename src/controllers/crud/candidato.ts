@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
+import { candidatoSchema } from "../../dto/validacoes/CandidatoValidacao";
+
 
 const Candidato = new PrismaClient()
 //criar candidato
@@ -18,6 +20,8 @@ async function createCandidato(req: Request, res: Response) {
             curriculo_anexo,
             senha
         } = req.body;
+        //verificação pelo zod
+        candidatoSchema.parse({id_endereco, id_curriculoForm, nome, sobrenome,cpf,dataNascimento: new Date(dataNascimento),email,telefone,curriculo_anexo,senha});
         //criptografa a senha, usando a biblioteca bcrypt
         const senhaCriptografada = await bcrypt.hash(senha, 10);
         //verificar endereco e curriculo
@@ -45,7 +49,7 @@ async function createCandidato(req: Request, res: Response) {
                     nome,
                     sobrenome,
                     cpf,
-                    dataNascimento,
+                    dataNascimento, //toString().split('T')[0],
                     email,
                     telefone,
                     curriculo_anexo,
@@ -62,26 +66,26 @@ async function createCandidato(req: Request, res: Response) {
     }
 }
 //validar a senha
-async function isValid(req: Request, res: Response) {
-    try {
-        const {
-            email,
-            senha,
-        } = req.body;
+// async function isValid(req: Request, res: Response) {
+//     try {
+//         const {
+//             email,
+//             senha,
+//         } = req.body;
 
-        const user = await Candidato.userCandidato.findUnique({ where: { email: email } })
+//         const user = await Candidato.userCandidato.findUnique({ where: { email: email } })
 
-        const isValid = await bcrypt.compare(senha, user.senha)
+//         const isValid = await bcrypt.compare(senha, user.senha)
 
-        if (!isValid) {
-            return res.status(401).send("ERROU A SENHA")
-        }
+//         if (!isValid) {
+//             return res.status(401).send("ERROU A SENHA")
+//         }
 
-        res.status(200).send();
-    } catch (error) {
-        console.log(error)
-    }
-}
+//         res.status(200).send();
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
 
 //atualizar candidato
 //passar no req.body e no data os atributos a serem mudados
@@ -147,4 +151,4 @@ async function deleteCandidato(req: Request, res: Response) {
     }
 }
 
-export { createCandidato, isValid, UpdateCandidato, findAllCandidatos, findOneCandidato, deleteCandidato }
+export { createCandidato, UpdateCandidato, findAllCandidatos, findOneCandidato, deleteCandidato }
