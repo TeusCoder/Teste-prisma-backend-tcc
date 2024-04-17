@@ -1,13 +1,13 @@
 {
-  "name": "nova-pasta",
+  "name": "worksearch-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "tcc da fiec, aqui estarão os arquivos do backend",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/index.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Mateus",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.12.1",
@@ -15,7 +15,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
     "multer": "^1.4.5-lts.1",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
