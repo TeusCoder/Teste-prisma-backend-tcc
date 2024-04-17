@@ -1,4 +1,5 @@
-pegar curriculo por pdf
+definir erros de repeticao de campos uniques
+
 <!-- sempre que mudar algo no controller, verificar se esta não dara errro na rota -->
 
 comandos no prisma
