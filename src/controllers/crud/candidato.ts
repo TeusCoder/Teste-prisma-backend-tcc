@@ -49,7 +49,7 @@ async function createCandidato(req: Request, res: Response) {
                     nome,
                     sobrenome,
                     cpf,
-                    dataNascimento, //toString().split('T')[0],
+                    dataNascimento, 
                     email,
                     telefone,
                     curriculo_anexo,

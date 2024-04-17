@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { error } from "console";
 import { Request, Response } from "express";
+import { candidatoVagaSchema } from "../../dto/validacoes/CandidadoVagaValidacao";
 
 const InscricaoCandVaga = new PrismaClient()
 
@@ -11,6 +12,8 @@ async function CreateInscricaoCandVaga(req: Request, res: Response) {
             id_vaga,
             dataInscricao
         } = req.body;
+        //verificação pelo zod
+        candidatoVagaSchema.parse({id_userCandidato, id_vaga, dataInscricao: new Date(dataInscricao)});
 
         const VerificaCandidato = await InscricaoCandVaga.userCandidato.findUnique({
             where: { id_userCandidato }

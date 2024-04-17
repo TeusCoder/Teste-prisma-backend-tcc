@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import { EmpresaSchema } from "../../dto/validacoes/EmpresaValidacao";
 
 const Empresa = new PrismaClient()
 
@@ -15,7 +16,10 @@ async function CreateEmpresa(req: Request, res: Response) {
             ie,
             telefone,
             email,
-            senha } = req.body;
+            senha
+         } = req.body;
+         //verificação pelo zod
+         EmpresaSchema.parse({id_endereco,razaoSocial,nome_fantasia,cnpj,ie,telefone,email,senha});
 
         //criptografa a senha, usando a biblioteca bcrypt
         const senhaCriptografada = await bcrypt.hash(senha, 10);

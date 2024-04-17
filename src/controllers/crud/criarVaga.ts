@@ -6,6 +6,7 @@
 // dataCriacao String
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import { CriaVagaSchema } from "../../dto/validacoes/CriarVagaValidacao";
 
 const CriaVaga = new PrismaClient();
 
@@ -16,6 +17,10 @@ async function createCriaVaga(req: Request, res: Response) {
             id_vaga,
             dataCriacao
         } = req.body;
+
+        //validação pelo zod
+        CriaVagaSchema.parse({id_userEmpresa, id_vaga,dataCriacao: new Date(dataCriacao)});
+
         const createdCriaVaga = await CriaVaga.criarVaga.create({
             data: {
                 id_userEmpresa,

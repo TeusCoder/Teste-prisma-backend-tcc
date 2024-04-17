@@ -1,6 +1,7 @@
 
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import { EnderecoSchema } from "../../dto/validacoes/EnderecoValidacao";
 
 const Endereco = new PrismaClient()
 
@@ -15,10 +16,8 @@ async function createEndereco(req: Request, res: Response) {
             numero,
             cep
         } = req.body;
-
-        // if({estado}.estado.length<2){
-        //     return res.status(400).send("digite um UF valido");
-        // }
+        //validacao pelo zod
+        EnderecoSchema.parse({pais,estado,cidade,bairro,logradouro,numero,cep})
         const EnderecoExistente = await Endereco.endereco.findFirst({ where: { cep, numero } })
 
         if (!EnderecoExistente) {

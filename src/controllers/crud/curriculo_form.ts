@@ -2,6 +2,7 @@
 
 import { PrismaClient } from "@prisma/client";
 import e, { Request, Response } from "express";
+import { CurriculoFormSchema } from "../../dto/validacoes/Curriculo_formValidacao";
 
 const Curriculo = new PrismaClient;
 
@@ -13,6 +14,9 @@ async function createCurriculo(req: Request, res: Response) {
             competenciasExtracurricular,
             certificacoes
         } = req.body;
+        //verificação pelo zod
+        CurriculoFormSchema.parse({escolaridade,experienciasAnt,competenciasExtracurricular,certificacoes});
+
         const createdCurriculo = await Curriculo.curriculo_form.create({
             data: {
                 escolaridade,
