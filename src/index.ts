@@ -16,7 +16,12 @@ import multer from "multer";
 dotenv.config();
 
 const app = express();
-app.use(cors())
+app.use(cors({
+    "origin": "*",
+    "methods": "GET,PUT,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+}))
 app.use(express.json());
 
 
@@ -29,7 +34,7 @@ app.use("/curriculos", RouterCurriculo)
 app.use("/inscricoes", RouterInscricoes)
 app.use("/criarVagas", RouterCriaVaga)
 app.use("/login", RouterLogin)
-app.use("/uploads", express.static('uploads'),RouterUploads)
+app.use("/uploads", express.static('uploads'), RouterUploads)
 
 app.listen(process.env.PORT, () => {
     console.log(`escutando na porta ${process.env.PORT}`)
