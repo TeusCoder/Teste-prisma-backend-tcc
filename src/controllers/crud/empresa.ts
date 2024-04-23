@@ -17,9 +17,9 @@ async function CreateEmpresa(req: Request, res: Response) {
             telefone,
             email,
             senha
-         } = req.body;
-         //verificação pelo zod
-         EmpresaSchema.parse({id_endereco,razaoSocial,nome_fantasia,cnpj,ie,telefone,email,senha});
+        } = req.body;
+        //verificação pelo zod
+        EmpresaSchema.parse({ id_endereco, razaoSocial, nome_fantasia, cnpj, ie, telefone, email, senha });
 
         //criptografa a senha, usando a biblioteca bcrypt
         const senhaCriptografada = await bcrypt.hash(senha, 10);
@@ -58,10 +58,10 @@ async function CreateEmpresa(req: Request, res: Response) {
 //passar no req.body e no data os atributos a serem mudados
 async function UpdateEmpresa(req: Request, res: Response) {
     try {
-        const { cnpj } = req.params;
+        const { id_userEmpresa } = req.params;
         const { nome_fantasia } = req.body;
         const EmpresaUpdated = await Empresa.userEmpresa.update({
-            where: { cnpj },
+            where: { id_userEmpresa },
             data: { nome_fantasia }
         });
         res.status(200).json(EmpresaUpdated);
@@ -81,13 +81,13 @@ async function findAllEmpresas(req: Request, res: Response) {
 
 async function findOneEmpresa(req: Request, res: Response) {
     try {
-        const { cnpj } = req.params;
-        if (!cnpj) {
-            return res.status(404).end("Digite um cnpj válido!");
+        const { id_userEmpresa } = req.params;
+        if (!id_userEmpresa) {
+            return res.status(404).end("Digite um id válido!");
         }
-        const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { cnpj } });
+        const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { id_userEmpresa } });
         if (!usuarioExistente) {
-            res.status(404).send(`Usuario com esse cpf: ${cnpj} não existe!`);
+            res.status(404).send(`Empresa com esse id: ${id_userEmpresa} não existe!`);
         } else {
             res.status(200).json(usuarioExistente)
         }
@@ -98,15 +98,15 @@ async function findOneEmpresa(req: Request, res: Response) {
 
 async function deleteEmpresa(req: Request, res: Response) {
     try {
-        const { cnpj } = req.params;
-        if (!cnpj) {
-            return res.status(404).end("Digite um cnpj válido!");
+        const { id_userEmpresa } = req.params;
+        if (!id_userEmpresa) {
+            return res.status(404).end("Digite um id válido!");
         }
-        const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { cnpj } });
+        const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { id_userEmpresa } });
         if (!usuarioExistente) {
-            res.status(404).send(`Usuario com esse cpf: ${cnpj} não existe!`);
+            res.status(404).send(`Empresa com esse id: ${id_userEmpresa} não existe!`);
         } else {
-            const usuarioExistente = await Empresa.userEmpresa.delete({ where: { cnpj } });
+            await Empresa.userEmpresa.delete({ where: { id_userEmpresa } });
             res.status(200).end("usuario deletado");
         }
     } catch (error) {

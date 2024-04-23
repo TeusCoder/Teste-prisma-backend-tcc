@@ -4,10 +4,10 @@ import { CreateEmpresa, deleteEmpresa, findAllEmpresas, findOneEmpresa, UpdateEm
 const route = Router();
 
 route.post("/", CreateEmpresa)
-route.put("/update/:cnpj", UpdateEmpresa)
+route.put("/update/:id_userEmpresa", UpdateEmpresa)
 route.get("/findAll", findAllEmpresas)
-route.get("/findOne/:cnpj",findOneEmpresa)
-route.delete("/delete/:cnpj", deleteEmpresa)
+route.get("/findOne/:id_userEmpresa",findOneEmpresa)
+route.delete("/delete/:id_userEmpresa", deleteEmpresa)
 
 
 export default route

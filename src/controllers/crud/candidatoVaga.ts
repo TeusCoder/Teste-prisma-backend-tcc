@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { error } from "console";
 import { Request, Response } from "express";
 import { candidatoVagaSchema } from "../../dto/validacoes/CandidadoVagaValidacao";
 
@@ -13,7 +12,7 @@ async function CreateInscricaoCandVaga(req: Request, res: Response) {
             dataInscricao
         } = req.body;
         //verificação pelo zod
-        candidatoVagaSchema.parse({id_userCandidato, id_vaga, dataInscricao: new Date(dataInscricao)});
+        candidatoVagaSchema.parse({ id_userCandidato, id_vaga, dataInscricao: new Date(dataInscricao) });
 
         const VerificaCandidato = await InscricaoCandVaga.userCandidato.findUnique({
             where: { id_userCandidato }
@@ -87,7 +86,7 @@ async function deleteInscricao(req: Request, res: Response) {
         if (!id_inscricao) {
             res.status(400).send("Verifique o id na url");
         } else {
-            const InscricaoDeleted = await InscricaoCandVaga.candidatoVaga.delete({
+            await InscricaoCandVaga.candidatoVaga.delete({
                 where: { id_inscricao }
             });
             res.status(200).end("inscricao deletada");
