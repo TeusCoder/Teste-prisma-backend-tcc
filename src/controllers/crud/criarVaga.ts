@@ -1,9 +1,3 @@
-// id_criaVaga String @id @default(uuid())
-// id_userEmpresa String @unique
-// Empresa UserEmpresa @relation(fields: [id_userEmpresa], references: [id_userEmpresa])
-// id_vaga String @unique
-// Vaga Vaga @relation(fields: [id_vaga], references: [id_vaga])
-// dataCriacao String
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { CriaVagaSchema } from "../../dto/validacoes/CriarVagaValidacao";
@@ -19,7 +13,7 @@ async function createCriaVaga(req: Request, res: Response) {
         } = req.body;
 
         //validação pelo zod
-        CriaVagaSchema.parse({id_userEmpresa, id_vaga,dataCriacao: new Date(dataCriacao)});
+        CriaVagaSchema.parse({ id_userEmpresa, id_vaga, dataCriacao: new Date(dataCriacao) });
 
         const createdCriaVaga = await CriaVaga.criarVaga.create({
             data: {
@@ -80,7 +74,7 @@ async function deleteVagaCriada(req: Request, res: Response) {
         if (!id_criaVaga) {
             res.status(400).send("Verifique o id na url");
         } else {
-            const VagaCriadaDeleted = await CriaVaga.criarVaga.delete({
+            await CriaVaga.criarVaga.delete({
                 where: { id_criaVaga }
             });
             res.status(200).end("vaga deletada");
@@ -90,4 +84,4 @@ async function deleteVagaCriada(req: Request, res: Response) {
     }
 }
 
-export {createCriaVaga, updateCriaVaga, findAllCriaVaga, findOneVagaCriada,deleteVagaCriada}
+export { createCriaVaga, updateCriaVaga, findAllCriaVaga, findOneVagaCriada, deleteVagaCriada }

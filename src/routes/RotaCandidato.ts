@@ -5,9 +5,9 @@ const route = Router();
 
 route.post("/", createCandidato)
 // route.post("/teste", isValid)
-route.put("/update/:email", UpdateCandidato)
+route.put("/update/:id_userCandidato", UpdateCandidato)
 route.get("/findAll", findAllCandidatos)
-route.get("/findOne/:cpf",findOneCandidato)
-route.delete("/delete/:cpf", deleteCandidato)
+route.get("/findOne/:id_userCandidato",findOneCandidato)
+route.delete("/delete/:id_userCandidato", deleteCandidato)
 
 export default route

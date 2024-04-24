@@ -21,7 +21,7 @@ async function createCandidato(req: Request, res: Response) {
             senha
         } = req.body;
         //verificação pelo zod
-        candidatoSchema.parse({id_endereco, id_curriculoForm, nome, sobrenome,cpf,dataNascimento: new Date(dataNascimento),email,telefone,curriculo_anexo,senha});
+        candidatoSchema.parse({ id_endereco, id_curriculoForm, nome, sobrenome, cpf, dataNascimento: new Date(dataNascimento), email, telefone, curriculo_anexo, senha });
         //criptografa a senha, usando a biblioteca bcrypt
         const senhaCriptografada = await bcrypt.hash(senha, 10);
         //verificar endereco e curriculo
@@ -49,7 +49,7 @@ async function createCandidato(req: Request, res: Response) {
                     nome,
                     sobrenome,
                     cpf,
-                    dataNascimento, 
+                    dataNascimento,
                     email,
                     telefone,
                     curriculo_anexo,
@@ -91,10 +91,10 @@ async function createCandidato(req: Request, res: Response) {
 //passar no req.body e no data os atributos a serem mudados
 async function UpdateCandidato(req: Request, res: Response) {
     try {
-        const { email } = req.params;
+        const { id_userCandidato } = req.params;
         const { nome } = req.body;
         const CandidatoUpdated = await Candidato.userCandidato.update({
-            where: { email },
+            where: { id_userCandidato },
             data: { nome }
         });
         res.status(200).json(CandidatoUpdated);
@@ -115,13 +115,13 @@ async function findAllCandidatos(req: Request, res: Response) {
 //encontrar pelo params pedido
 async function findOneCandidato(req: Request, res: Response) {
     try {
-        const { cpf } = req.params;
-        if (!cpf) {
-            return res.status(404).end("Digite um cpf valido!");
+        const { id_userCandidato } = req.params;
+        if (!id_userCandidato) {
+            return res.status(404).end("Digite um id valido!");
         }
-        const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { cpf } });
+        const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { id_userCandidato } });
         if (!usuarioExistente) {
-            res.status(404).send(`Usuario com esse cpf: ${cpf} não existe!`);
+            res.status(404).send(`Usuario com esse id: ${id_userCandidato} não existe!`);
         }
         else {
             res.status(200).json(usuarioExistente);
@@ -133,17 +133,17 @@ async function findOneCandidato(req: Request, res: Response) {
 //deletar
 async function deleteCandidato(req: Request, res: Response) {
     try {
-        const { cpf } = req.params;
-        //verificar se esta correto o cpf
-        if (!cpf) {
-            return res.status(200).end("Digite um cpf valido!");
+        const { id_userCandidato } = req.params;
+        //verificar se esta correto o id
+        if (!id_userCandidato) {
+            return res.status(200).end("Digite um id valido!");
         }
-        const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { cpf } });
+        const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { id_userCandidato } });
         if (!usuarioExistente) {
-            res.status(404).send(`Usuario com esse cpf: ${cpf} não existe!`);
+            res.status(404).send(`Usuario com esse cpf: ${id_userCandidato} não existe!`);
         }
         else {
-            const candidatoDeletado = await Candidato.userCandidato.delete({ where: { cpf } })
+            await Candidato.userCandidato.delete({ where: { id_userCandidato } })
             res.status(200).end("usuario deletado");
         }
     } catch (error) {

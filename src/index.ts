@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import dotenv from "dotenv";
-import path from "path";
+import cors from 'cors';
 
 import RouterEmpresas from './routes/RotaEmpresas'
 import RouterCandidatos from './routes/RotaCandidato'
@@ -16,6 +16,12 @@ import multer from "multer";
 dotenv.config();
 
 const app = express();
+app.use(cors({
+    "origin": "*",
+    "methods": "GET,PUT,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+}))
 app.use(express.json());
 
 
@@ -28,7 +34,7 @@ app.use("/curriculos", RouterCurriculo)
 app.use("/inscricoes", RouterInscricoes)
 app.use("/criarVagas", RouterCriaVaga)
 app.use("/login", RouterLogin)
-app.use("/uploads", express.static('uploads'),RouterUploads)
+app.use("/uploads", express.static('uploads'), RouterUploads)
 
 
 app.listen(process.env.PORT, () => {
