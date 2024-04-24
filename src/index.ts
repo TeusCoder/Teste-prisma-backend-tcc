@@ -30,6 +30,7 @@ app.use("/criarVagas", RouterCriaVaga)
 app.use("/login", RouterLogin)
 app.use("/uploads", express.static('uploads'),RouterUploads)
 
+
 app.listen(process.env.PORT, () => {
     console.log(`escutando na porta ${process.env.PORT}`)
 });

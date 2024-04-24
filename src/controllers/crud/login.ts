@@ -1,9 +1,32 @@
 import express, { Request, Response } from 'express';
 import { Prisma, PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import {ExtractJwt, Strategy as JwtStrategy, StrategyOptionsWithRequest} from 'passport-jwt';
+import passport from 'passport'
+import jwt from 'jsonwebtoken';
+import { candidatoSchema } from '../../dto/validacoes/CandidatoValidacao';
 
 const login = new PrismaClient();
 
+const jwtSecret = process.env.JWT_SECRET || 'secret'
+
+const jwtOptions ={
+    jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
+    secretOrKey: jwtSecret,
+    passReqToCallback:true
+};
+
+passport.use(new JwtStrategy(jwtOptions as StrategyOptionsWithRequest, async (req:Request, jwtPayload, done)=>{
+     const url = req.method + ' ' + req.baseUrl + req.url
+    console.log("user: ", jwtPayload.sub, " - url: - ", url )
+    if (jwtPayload.type === 0) {
+      done(null, { id: candidatoSchema });  // error first pattern
+    } else {
+      done(null, false);
+}
+}))
+
+//funcão para validar usuario ex:localhost:3000/login/loginUsuario?email=teste@gmail.com&password=12345678
 async function ValidaLoginUsuario(req:Request, res:Response){
    
     try{
@@ -23,7 +46,12 @@ async function ValidaLoginUsuario(req:Request, res:Response){
         if(!validaSenha){
             return res.status(401).json({ message: 'Senha incorreta.' });
         }else{
-            return res.status(200).json({ message: 'Credenciais válidas.', userId: user.id_userCandidato });
+            const token = jwt.sign({sub:email, type:0 }, jwtSecret,
+                {
+                    expiresIn: '1m'
+                })
+                
+            return res.status(200).json({token, message: 'Credenciais válidas.', userId: user.id_userCandidato });
     
         }
 
@@ -32,7 +60,7 @@ async function ValidaLoginUsuario(req:Request, res:Response){
             res.status(500).json({ message: 'Erro ao verificar credenciais.' });
     }
 };
-
+//rota para validar login da empresa ex:localhost:3000/login/loginEmpresa?email=teste@gmail.com&password=12345678
 async function ValidaLoginEmpresa(req:Request, res:Response){
    
     try{
@@ -52,7 +80,12 @@ async function ValidaLoginEmpresa(req:Request, res:Response){
         if(!validaSenha){
             return res.status(401).json({ message: 'Senha incorreta.' });
         }else{
-            return res.status(200).json({ message: 'Credenciais válidas.', userId: user.id_userEmpresa });
+            const token = jwt.sign({sub:email, type:0 }, jwtSecret,
+                {
+                    expiresIn: '1m'
+                })
+            
+            return res.status(200).json({token, message: 'Credenciais válidas.', userId: user.id_userEmpresa });
     
         }
 
@@ -61,5 +94,6 @@ async function ValidaLoginEmpresa(req:Request, res:Response){
             res.status(500).json({ message: 'Erro ao verificar credenciais.' });
     }
 };
+
 
 export {ValidaLoginUsuario, ValidaLoginEmpresa} 
