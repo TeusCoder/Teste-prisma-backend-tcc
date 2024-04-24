@@ -8,7 +8,7 @@ import { candidatoSchema } from '../../dto/validacoes/CandidatoValidacao';
 
 const login = new PrismaClient();
 
-const jwtSecret = process.env.JWT_SECRET || 'secret'
+const jwtSecret = process.env.JWT_SECRET || 'secret' //colocar no .env --> JWT_SECRET= '***'<-- uma senha segura
 
 const jwtOptions ={
     jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
@@ -48,7 +48,7 @@ async function ValidaLoginUsuario(req:Request, res:Response){
         }else{
             const token = jwt.sign({sub:email, type:0 }, jwtSecret,
                 {
-                    expiresIn: '1m'
+                    expiresIn: '1h'
                 })
                 
             return res.status(200).json({token, message: 'Credenciais válidas.', userId: user.id_userCandidato });
