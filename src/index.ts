@@ -11,6 +11,7 @@ import RouterInscricoes from './routes/RotaInscricaoCandidatoVaga'
 import RouterCriaVaga from './routes/RotaCriaVaga'
 import RouterUploads from './routes/RotaUpload'
 import RouterLogin from './routes/RotaLogin'
+import passport from "passport";
 import multer from "multer";
 
 dotenv.config();
@@ -34,6 +35,7 @@ app.use("/curriculos", RouterCurriculo)
 app.use("/inscricoes", RouterInscricoes)
 app.use("/criarVagas", RouterCriaVaga)
 app.use("/login", RouterLogin)
+app.use('/token', passport.authenticate('jwt', { session: false }), RouterLogin);
 app.use("/uploads", express.static('uploads'), RouterUploads)
 
 

@@ -82,7 +82,7 @@ async function ValidaLoginEmpresa(req:Request, res:Response){
         }else{
             const token = jwt.sign({sub:email, type:0 }, jwtSecret,
                 {
-                    expiresIn: '1m'
+                    expiresIn: '1h'
                 })
             
             return res.status(200).json({token, message: 'Credenciais válidas.', userId: user.id_userEmpresa });

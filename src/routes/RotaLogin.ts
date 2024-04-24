@@ -7,4 +7,5 @@ route.get("/loginEmpresa",ValidaLoginEmpresa)
 route.get("/loginUsuario",ValidaLoginUsuario)
 
 
+
 export default route
