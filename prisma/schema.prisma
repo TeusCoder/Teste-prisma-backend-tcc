@@ -7,10 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User{
+  id_user String @id @default(uuid())
+  email String @unique @db.Char(100)
+  senha String @unique
+  tipo String
+  status Int
+  empresa UserEmpresa?
+  candidato UserCandidato?
+}
+
 model UserEmpresa{
   id_userEmpresa  String @id @default(uuid())
   id_endereco String @unique
   endereco Endereco @relation(fields: [id_endereco], references: [id_endereco])
+  id_user String @unique
+  user User @relation(fields: [id_user], references: [id_user])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   razaoSocial String @db.Char(100)
@@ -18,8 +30,6 @@ model UserEmpresa{
   cnpj String @unique @db.Char(14)
   ie String @unique @db.Char(16)
   telefone String @db.Char(11)
-  email String @unique @db.Char(100)
-  senha String
   CriaVaga CriarVaga[]
 }
 
@@ -27,30 +37,31 @@ model UserCandidato{
   id_userCandidato String @id @default(uuid())
   id_endereco String @unique  
   endereco Endereco @relation(fields: [id_endereco], references: [id_endereco])
-  id_curriculoForm String @unique 
-  curriculo_form Curriculo_form @relation(fields: [id_curriculoForm], references: [id_curriculoForm])
+  id_user String @unique
+  user User @relation(fields: [id_user], references: [id_user])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   nome String @db.Char(100) 
   sobrenome String @db.Char(100)
   cpf String @unique @db.Char(11)
   dataNascimento DateTime 
-  email String @unique @db.Char(100)
   telefone String @db.Char(11)
-  curriculo_anexo String @db.LongText
-  senha String
   candidatoVaga CandidatoVaga[]
+  curriculo Curriculo_form?
+
 }
 
 model Curriculo_form {
   id_curriculoForm String @id @default(uuid())
+  id_userCandidato String @unique
+  Candidato UserCandidato @relation(fields: [id_userCandidato], references: [id_userCandidato]) 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   escolaridade String @db.Char(100)
   experienciasAnt String @db.LongText
   competenciasExtracurricular String @db.LongText
   certificacoes String @db.LongText
-  userCandidato UserCandidato []
+  curriculo_anexo String? @default("SemCV")
 }
 
 model CandidatoVaga{
