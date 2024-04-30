@@ -9,20 +9,24 @@ const Curriculo = new PrismaClient;
 async function createCurriculo(req: Request, res: Response) {
     try {
         const {
+            id_userCandidato,
             escolaridade,
             experienciasAnt,
             competenciasExtracurricular,
-            certificacoes
+            certificacoes,
+            curriculo_anexo
         } = req.body;
         //verificação pelo zod
-        CurriculoFormSchema.parse({escolaridade,experienciasAnt,competenciasExtracurricular,certificacoes});
+        CurriculoFormSchema.parse({id_userCandidato,escolaridade,experienciasAnt,competenciasExtracurricular,certificacoes, curriculo_anexo});
 
         const createdCurriculo = await Curriculo.curriculo_form.create({
             data: {
+                id_userCandidato,
                 escolaridade,
                 experienciasAnt,
                 competenciasExtracurricular,
-                certificacoes
+                certificacoes,
+                curriculo_anexo
             }
         });
         res.status(201).json(createdCurriculo);
@@ -31,20 +35,20 @@ async function createCurriculo(req: Request, res: Response) {
     }
 }
 
-async function updateCurriculo(req: Request, res: Response) {
-    try {
-        const { id_curriculoForm } = req.params;
-        const { escolaridade } = req.body;
+// async function updateCurriculo(req: Request, res: Response) {
+//     try {
+//         const { id_curriculoForm } = req.params;
+//         const { escolaridade } = req.body;
 
-        const curriculoUpdated = await Curriculo.curriculo_form.update({
-            where: { id_curriculoForm },
-            data: { escolaridade }
-        });
-        res.status(200).json(curriculoUpdated);
-    } catch (error) {
-        console.log(error);
-    }
-}
+//         const curriculoUpdated = await Curriculo.curriculo_form.update({
+//             where: { id_curriculoForm },
+//             data: { escolaridade }
+//         });
+//         res.status(200).json(curriculoUpdated);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 async function findAllCurriculos(req: Request, res: Response) {
     try {
@@ -85,4 +89,4 @@ async function deleteCurriculo(req: Request, res: Response) {
     }
 }
 
-export { createCurriculo, updateCurriculo, findAllCurriculos, findOneCurriculo, deleteCurriculo }
+export { createCurriculo, findAllCurriculos, findOneCurriculo, deleteCurriculo }
