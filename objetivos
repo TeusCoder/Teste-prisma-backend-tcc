@@ -1,0 +1,58 @@
+// deixar a req.body das funções de update de uma maneira q fique recebendo aquilo q o user digitar
+
+
+// <!-- sempre que mudar algo no controller, verificar se esta não dara errro na rota -->
+
+// comandos no prisma
+
+// mandar alterações do banco de dados (migrate)
+
+// -- npx prisma migrate dev
+// -- npx prisma studio
+
+// função para validar a senha:
+// /*
+// async function isValid(req: Request, res: Response) {
+//     const {
+//         email,
+//         senha,
+//     } = req.body;
+
+//     const user = await Empresa.userEmpresa.findUnique({ where: { email: email } })
+
+//     const isValid = await bcrypt.compare(senha, user.senha)
+
+//     if (!isValid) {
+//         return res.status(401).send("ERROU A SENHA")
+//     }
+
+//     res.status(200).send("compativel");
+// }*/
+
+// import bcrypt from "bcrypt";
+
+
+//         //criptografa a senha, usando a biblioteca bcrypt
+//         const senhaCriptografada = await bcrypt.hash(senha, 10);
+
+// deletar do candidato 
+// //deletar
+// async function deleteCandidato(req: Request, res: Response) {
+//     try {
+//         const { id_userCandidato } = req.params;
+//         //verificar se esta correto o id
+//         if (!id_userCandidato) {
+//             return res.status(200).end("Digite um id valido!");
+//         }
+//         const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { id_userCandidato } });
+//         if (!usuarioExistente) {
+//             res.status(404).send(`Usuario com esse cpf: ${id_userCandidato} não existe!`);
+//         }
+//         else {
+//             await Candidato.userCandidato.delete({ where: { id_userCandidato } })
+//             res.status(200).end("usuario deletado");
+//         }
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
