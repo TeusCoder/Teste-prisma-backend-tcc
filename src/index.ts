@@ -10,8 +10,9 @@ import RouterCurriculo from './routes/RotaCurriculo'
 import RouterInscricoes from './routes/RotaInscricaoCandidatoVaga'
 import RouterCriaVaga from './routes/RotaCriaVaga'
 import RouterUploads from './routes/RotaUpload'
-// import RouterLogin from './routes/RotaLogin'
+import RouterLogin from './routes/RotaLogin'
 import multer from "multer";
+import passport from "passport";
 import RouterUsers from './routes/RotaUser'
 
 
@@ -35,7 +36,8 @@ app.use("/vagas", RouterVaga)
 app.use("/curriculos", RouterCurriculo)
 app.use("/inscricoes", RouterInscricoes)
 app.use("/criarVagas", RouterCriaVaga)
-// app.use("/login", RouterLogin)
+app.use("/token", passport.authenticate('jwt', { session: false }), RouterLogin);
+app.use("/login", RouterLogin)
 app.use("/uploads", express.static('uploads'), RouterUploads)
 app.use("/users", RouterUsers)
 
