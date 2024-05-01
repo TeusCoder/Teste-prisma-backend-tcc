@@ -26,7 +26,7 @@ passport.use(new JwtStrategy(jwtOptions as StrategyOptionsWithRequest, async (re
 }
 }))
 
-//funcão para validar usuario ex:localhost:3000/login/loginUsuario?email=teste@gmail.com&password=12345678
+//funcão para validar usuario ex:localhost:3000/login?email=teste@gmail.com&password=12345678
 async function ValidaLogin(req:Request, res:Response){
    
     try{
