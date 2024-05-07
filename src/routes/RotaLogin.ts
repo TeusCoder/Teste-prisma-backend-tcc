@@ -1,10 +1,10 @@
-// import { Router } from "express";
-// import { ValidaLoginEmpresa, ValidaLoginUsuario } from "../controllers/crud/login";
+ import { Router } from "express";
+ import ValidaLogin from "../controllers/crud/login";
 
-// const route = Router();
+const route = Router();
 
-// route.get("/loginEmpresa",ValidaLoginEmpresa)
-// route.get("/loginUsuario",ValidaLoginUsuario)
+ route.get("/",ValidaLogin)
+ 
 
 
-// export default route
+export default route
