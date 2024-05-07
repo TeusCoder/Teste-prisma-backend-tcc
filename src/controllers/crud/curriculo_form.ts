@@ -4,26 +4,52 @@ import { PrismaClient } from "@prisma/client";
 import e, { Request, Response } from "express";
 import { CurriculoFormSchema } from "../../dto/validacoes/Curriculo_formValidacao";
 
+// id_userCandidato String @unique 
+// nomeEmpresa String @db.Char(100)
+// cargo String @db.Char(100)
+// periodo String @db.Char(100)
+// realizacoes String @db.Char(255)
+// instituicao String @db.Char(100)
+// grau String @db.Char(100)
+// campoEstudo String @db.Char(100)
+// periodoEstudo String @db.Char(100)
+// competenciasExtracurricular String @db.LongText
+// certificacoes String @db.LongText
+// curriculo_anexo String? @default("SemCV")
+
 const Curriculo = new PrismaClient;
 
 async function createCurriculo(req: Request, res: Response) {
     try {
         const {
             id_userCandidato,
-            escolaridade,
-            experienciasAnt,
+            nomeEmpresa,
+            cargo,
+            periodo,
+            realizacoes,
+            instituicao,
+            grau,
+            campoEstudo,
+            periodoEstudo,
             competenciasExtracurricular,
             certificacoes,
             curriculo_anexo
         } = req.body;
         //verificação pelo zod
-        CurriculoFormSchema.parse({id_userCandidato,escolaridade,experienciasAnt,competenciasExtracurricular,certificacoes, curriculo_anexo});
+        CurriculoFormSchema.parse({id_userCandidato,nomeEmpresa,cargo,periodo,realizacoes,instituicao,
+            grau,campoEstudo,periodoEstudo,competenciasExtracurricular,certificacoes, curriculo_anexo});
 
         const createdCurriculo = await Curriculo.curriculo_form.create({
             data: {
                 id_userCandidato,
-                escolaridade,
-                experienciasAnt,
+                nomeEmpresa,
+                cargo,
+                periodo,
+                realizacoes,
+                instituicao,
+                grau,
+                campoEstudo,
+                periodoEstudo,
                 competenciasExtracurricular,
                 certificacoes,
                 curriculo_anexo
