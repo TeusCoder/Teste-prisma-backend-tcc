@@ -54,8 +54,14 @@ model Curriculo_form {
   Candidato UserCandidato @relation(fields: [id_userCandidato], references: [id_userCandidato]) 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  escolaridade String @db.Char(100)
-  experienciasAnt String @db.LongText
+  nomeEmpresa String @db.Char(100)
+  cargo String @db.Char(100)
+  periodo String @db.Char(100)
+  realizacoes String @db.Char(255)
+  instituicao String @db.Char(100)
+  grau String @db.Char(100)
+  campoEstudo String @db.Char(100)
+  periodoEstudo String @db.Char(100)
   competenciasExtracurricular String @db.LongText
   certificacoes String @db.LongText
   curriculo_anexo String? @default("SemCV")

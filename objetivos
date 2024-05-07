@@ -35,7 +35,7 @@
 //         //criptografa a senha, usando a biblioteca bcrypt
 //         const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-// deletar do candidato 
+// deletar do candidaton 
 // //deletar
 // async function deleteCandidato(req: Request, res: Response) {
 //     try {
