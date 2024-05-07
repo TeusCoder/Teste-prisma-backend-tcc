@@ -82,10 +82,12 @@ model Vaga{
   id_vaga String @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  dataAbertura DateTime
-  dataFechamento DateTime
+  titulo String @db.Char(100)
+  categoria String @db.Char(100)
   descricao String @db.LongText
   requisitos String @db.LongText
+  dataAbertura DateTime
+  dataFechamento DateTime
   CandidatoVaga CandidatoVaga[]
   CriaVaga CriarVaga[]
 }

@@ -7,21 +7,26 @@ const Vaga = new PrismaClient();
 async function createVaga(req: Request, res: Response) {
     try {
         const {
+            titulo,
+            categoria,
+            descricao,
+            requisitos,
             dataAbertura,
             dataFechamento,
-            descricao,
-            requisitos
+
         } = req.body;
         //validacao pelo zod
-        VagaSchema.parse({dataAbertura: new Date(dataAbertura), dataFechamento: new Date(dataFechamento), descricao,requisitos});
+        VagaSchema.parse({titulo,categoria, descricao,requisitos,dataAbertura: new Date(dataAbertura), dataFechamento: new Date(dataFechamento)});
 
 
         const createdVaga = await Vaga.vaga.create({
             data: {
+                titulo,
+                categoria,
+                descricao,
+                requisitos,
                 dataAbertura,
                 dataFechamento,
-                descricao,
-                requisitos
             }
         });
         res.status(201).json(createdVaga);
