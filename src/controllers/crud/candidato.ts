@@ -17,8 +17,8 @@ async function createCandidato(req: Request, res: Response) {
             telefone,
         } = req.body;
         //verificação pelo zod
-        candidatoSchema.parse({ id_user, id_endereco, nome, sobrenome, cpf, dataNascimento: new Date(dataNascimento), telefone });
-
+        candidatoSchema.parse({ id_user, id_endereco, nome, sobrenome, cpf, dataNascimento:new Date(dataNascimento).toISOString(), telefone });
+        console.log(dataNascimento)
         //verificar endereco e /user
         const VerificaEndereco = await Candidato.endereco.findUnique({
             where: { id_endereco }
@@ -40,7 +40,7 @@ async function createCandidato(req: Request, res: Response) {
                     nome,
                     sobrenome,
                     cpf,
-                    dataNascimento,
+                    dataNascimento:new Date(dataNascimento).toISOString() ,
                     telefone,
                 }
             })

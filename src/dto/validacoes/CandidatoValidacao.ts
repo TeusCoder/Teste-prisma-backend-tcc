@@ -6,6 +6,6 @@ export const candidatoSchema = z.object({
     nome : z.string().min(3),
     sobrenome : z.string().min(3),
     cpf : z.string().length(11),
-    dataNascimento : z.date(), //formato (YYYY-MM-DD)
+    dataNascimento : z.string(), //formato (YYYY-MM-DD)
     telefone : z.string().length(11),
 })
