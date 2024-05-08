@@ -16,7 +16,7 @@ async function createVaga(req: Request, res: Response) {
 
         } = req.body;
         //validacao pelo zod
-        VagaSchema.parse({titulo,categoria, descricao,requisitos,dataAbertura: new Date(dataAbertura), dataFechamento: new Date(dataFechamento)});
+        VagaSchema.parse({titulo,categoria, descricao,requisitos,dataAbertura: new Date(dataAbertura).toISOString(), dataFechamento: new Date(dataFechamento).toISOString() });
 
 
         const createdVaga = await Vaga.vaga.create({
@@ -25,8 +25,8 @@ async function createVaga(req: Request, res: Response) {
                 categoria,
                 descricao,
                 requisitos,
-                dataAbertura,
-                dataFechamento,
+                dataAbertura : new Date(dataAbertura).toISOString(),
+                dataFechamento : new Date(dataFechamento).toISOString(),
             }
         });
         res.status(201).json(createdVaga);

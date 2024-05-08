@@ -12,7 +12,7 @@ async function CreateInscricaoCandVaga(req: Request, res: Response) {
             dataInscricao
         } = req.body;
         //verificação pelo zod
-        candidatoVagaSchema.parse({ id_userCandidato, id_vaga, dataInscricao: new Date(dataInscricao) });
+        candidatoVagaSchema.parse({ id_userCandidato, id_vaga, dataInscricao: new Date(dataInscricao).toISOString() });
 
         const VerificaCandidato = await InscricaoCandVaga.userCandidato.findUnique({
             where: { id_userCandidato }
@@ -31,7 +31,7 @@ async function CreateInscricaoCandVaga(req: Request, res: Response) {
             data: {
                 id_userCandidato,
                 id_vaga,
-                dataInscricao
+                dataInscricao:new Date(dataInscricao).toISOString()
             }
         });
         res.status(201).json(createdInscricao);

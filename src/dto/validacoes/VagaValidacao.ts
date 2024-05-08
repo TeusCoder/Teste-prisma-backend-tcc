@@ -5,7 +5,7 @@ export const VagaSchema = z.object({
     categoria : z.string().min(1),
     descricao : z.string().min(1),
     requisitos : z.string().min(1),
-    dataAbertura : z.date(),
-    dataFechamento : z.date(),
+    dataAbertura : z.string(),
+    dataFechamento : z.string(),
 
 })

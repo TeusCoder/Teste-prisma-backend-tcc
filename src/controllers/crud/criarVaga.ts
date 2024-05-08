@@ -13,13 +13,13 @@ async function createCriaVaga(req: Request, res: Response) {
         } = req.body;
 
         //validação pelo zod
-        CriaVagaSchema.parse({ id_userEmpresa, id_vaga, dataCriacao: new Date(dataCriacao) });
+        CriaVagaSchema.parse({ id_userEmpresa, id_vaga, dataCriacao: new Date(dataCriacao).toISOString() });
 
         const createdCriaVaga = await CriaVaga.criarVaga.create({
             data: {
                 id_userEmpresa,
                 id_vaga,
-                dataCriacao
+                dataCriacao: new Date(dataCriacao).toISOString()
             }
         });
         res.status(201).json(createdCriaVaga);
