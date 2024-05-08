@@ -109,7 +109,8 @@ model Endereco {
   estado String @db.Char(20)
   cidade String @db.Char(100)
   bairro String @db.Char(100)
-  logradouro String? 
+  logradouro String @db.Char(100)
+  complemento String? 
   numero String  @db.Char(10)
   cep String @db.Char(8) 
   UserCandidato UserCandidato[]
