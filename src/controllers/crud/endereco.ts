@@ -13,29 +13,26 @@ async function createEndereco(req: Request, res: Response) {
             cidade,
             bairro,
             logradouro,
+            complemento,
             numero,
             cep
         } = req.body;
         //validacao pelo zod
-        EnderecoSchema.parse({pais,estado,cidade,bairro,logradouro,numero,cep})
-        const EnderecoExistente = await Endereco.endereco.findFirst({ where: { cep, numero } })
+        EnderecoSchema.parse({ pais, estado, cidade, bairro, logradouro, complemento, numero, cep })
 
-        if (!EnderecoExistente) {
-            const createdEndereco = await Endereco.endereco.create({
-                data: {
-                    pais,
-                    estado,
-                    cidade,
-                    bairro,
-                    logradouro,
-                    numero,
-                    cep
-                }
-            })
-            return res.status(201).json(createdEndereco)
-        }
-        res.status(400).send("Endereço ja existente!")
-
+        const createdEndereco = await Endereco.endereco.create({
+            data: {
+                pais,
+                estado,
+                cidade,
+                bairro,
+                logradouro,
+                complemento,
+                numero,
+                cep
+            }
+        })
+        return res.status(201).json(createdEndereco)
     } catch (error) {
         console.log(error)
     }
@@ -88,11 +85,11 @@ async function findOneEndereco(req: Request, res: Response) {
 async function deleteEndereco(req: Request, res: Response) {
     try {
         const { id_endereco } = req.params;
-        if(!id_endereco){
+        if (!id_endereco) {
             res.status(400).send("Verifique o id na url");
-        } else{
-         await Endereco.endereco.delete({ where: { id_endereco } })
-        res.status(200).end("endereço deletado");
+        } else {
+            await Endereco.endereco.delete({ where: { id_endereco } })
+            res.status(200).end("endereço deletado");
         }
     }
     catch (error) {

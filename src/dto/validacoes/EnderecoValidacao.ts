@@ -5,7 +5,8 @@ export const EnderecoSchema = z.object({
     estado : z.string().min(2),
     cidade : z.string().min(3),
     bairro : z.string().min(4),
-    logradouro : z.string(),
+    logradouro : z.string().min(1),
+    complemento : z.string(),
     numero: z.string().min(1),
     cep: z.string().length(8)
 })
