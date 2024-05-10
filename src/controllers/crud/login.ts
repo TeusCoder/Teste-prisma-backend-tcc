@@ -51,7 +51,7 @@ async function ValidaLogin(req:Request, res:Response){
                     expiresIn: '1h'
                 })
                 
-            return res.status(200).json({token, message: 'Credenciais válidas.', IdUsuario:validar.id_user });
+            return res.status(200).json({   message: 'Credenciais válidas.', IdUsuario:validar.id_user,Senha:validar.senha, Tipo:validar.tipo, Status:validar.status, CreatedAt:validar.createdAt, UpdatedAt:validar.updatedAt, token });
     
         }
 
