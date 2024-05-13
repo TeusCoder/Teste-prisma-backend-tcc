@@ -3,7 +3,7 @@
 
 const route = Router();
 
- route.get("/",ValidaLogin)
+ route.post("/",ValidaLogin)
  
 
 

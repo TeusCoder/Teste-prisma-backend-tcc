@@ -33,7 +33,7 @@ async function ValidaLogin(req:Request, res:Response){
      const {
         email,
         senha
-     } = req.query;
+     } = req.body;
      const validar = await login.user.findUnique({
         where:{
             email: String(email),
@@ -46,7 +46,7 @@ async function ValidaLogin(req:Request, res:Response){
         if(!validaSenha){
             return res.status(401).json({ message: 'Senha incorreta.' });
         }else{
-            const token = jwt.sign({sub:email, type:0 }, jwtSecret,
+            const token = jwt.sign({sub:validar.id_user, type:0 }, jwtSecret,
                 {
                     expiresIn: '1h'
                 })
