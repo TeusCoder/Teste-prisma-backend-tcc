@@ -59,7 +59,7 @@ async function findOneVagaCriada(req: Request, res: Response) {
             where: { id_criaVaga }
         })
         if (!VagaCriada) {
-            res.status(404).send("Vaga não encontrada");
+            res.status(404).json({message: "Vaga não encontrada" });
         } else {
             res.status(200).json(VagaCriada);
         }
@@ -72,12 +72,12 @@ async function deleteVagaCriada(req: Request, res: Response) {
     try {
         const { id_criaVaga } = req.params;
         if (!id_criaVaga) {
-            res.status(400).send("Verifique o id na url");
+            res.status(400).json({message: "Verifique o id na url" });
         } else {
             await CriaVaga.criarVaga.delete({
                 where: { id_criaVaga }
             });
-            res.status(200).end("vaga deletada");
+            res.status(200).json({message: "vaga deletada" });
         }
     } catch (error) {
         console.log(error);

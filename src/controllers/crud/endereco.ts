@@ -69,11 +69,11 @@ async function findOneEndereco(req: Request, res: Response) {
     try {
         const { cep } = req.params;
         if (!cep) {
-            return res.status(404).end("digite cep valido");
+            return res.status(404).json({message: "digite cep valido" });
         };
         const EnderecoExistente = await Endereco.endereco.findFirst({ where: { cep } })
         if (!EnderecoExistente) {
-            res.status(404).send("Endereco não existe");
+            res.status(404).json({ message: "Endereco não existe"});
         } else {
             res.status(200).json(EnderecoExistente)
         }
@@ -86,10 +86,10 @@ async function deleteEndereco(req: Request, res: Response) {
     try {
         const { id_endereco } = req.params;
         if (!id_endereco) {
-            res.status(400).send("Verifique o id na url");
+            res.status(400).json({message: "Verifique o id na url"});
         } else {
             await Endereco.endereco.delete({ where: { id_endereco } })
-            res.status(200).end("endereço deletado");
+            res.status(200).json({message: "endereço deletado"});
         }
     }
     catch (error) {

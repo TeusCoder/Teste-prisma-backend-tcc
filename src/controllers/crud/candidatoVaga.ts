@@ -18,14 +18,14 @@ async function CreateInscricaoCandVaga(req: Request, res: Response) {
             where: { id_userCandidato }
         })
         if (!VerificaCandidato) {
-            return res.status(404).json({ error: "Candidato não encontrado" });
+            return res.status(404).json({ message: "Candidato não encontrado" });
         }
 
         const VerificaVaga = await InscricaoCandVaga.vaga.findUnique({
             where: { id_vaga }
         });
         if (!VerificaVaga) {
-            return res.status(404).json({ error: "Vaga não encontrada" });
+            return res.status(404).json({ messsage: "Vaga não encontrada" });
         }
         const createdInscricao = await InscricaoCandVaga.candidatoVaga.create({
             data: {
@@ -71,7 +71,7 @@ async function findOneInscricao(req: Request, res: Response) {
             where: { id_inscricao }
         })
         if (!InscricaoExistente) {
-            res.status(404).send("Inscricao não encontrada");
+            res.status(404).json({message: "Inscricao não encontrada"});
         } else {
             res.status(200).json(InscricaoExistente);
         }
@@ -84,12 +84,12 @@ async function deleteInscricao(req: Request, res: Response) {
     try {
         const { id_inscricao } = req.params;
         if (!id_inscricao) {
-            res.status(400).send("Verifique o id na url");
+            res.status(400).json({message: "Verifique o id na url" });
         } else {
             await InscricaoCandVaga.candidatoVaga.delete({
                 where: { id_inscricao }
             });
-            res.status(200).end("inscricao deletada");
+            res.status(200).json({message: "inscricao deletada" });
         }
     } catch (error) {
         console.log(error);

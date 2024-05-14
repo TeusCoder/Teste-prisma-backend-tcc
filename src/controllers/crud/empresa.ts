@@ -23,10 +23,10 @@ async function CreateEmpresa(req: Request, res: Response) {
             where: { id_endereco }
         });
         if (!VerificaEndereco) {
-            return res.status(404).json({ error: 'Endereço não encontrado.' });
+            return res.status(404).json({ message: 'Endereço não encontrado.' });
         };
         const VerificaUser = await Empresa.user.findUnique({where: {id_user}});
-        if(!VerificaUser) {return res.status(404).end("User não encontrado")};
+        if(!VerificaUser) {return res.status(404).json({message: "User não encontrado"})};
 
         const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { cnpj } });
 
@@ -44,7 +44,7 @@ async function CreateEmpresa(req: Request, res: Response) {
             })
             res.status(201).json(createdEmpresa);
         } else {
-            res.status(400).send(`Usuario com esse cpf: ${cnpj} já existe!`);
+            res.status(400).json({message: `Usuario com esse cpf: ${cnpj} já existe!`});
         }
     } catch (error) {
         console.log(error);
@@ -79,11 +79,11 @@ async function findOneEmpresa(req: Request, res: Response) {
     try {
         const { id_userEmpresa } = req.params;
         if (!id_userEmpresa) {
-            return res.status(404).end("Digite um id válido!");
+            return res.status(404).json({message: "Digite um id válido!"});
         }
         const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { id_userEmpresa } });
         if (!usuarioExistente) {
-            res.status(404).send(`Empresa com esse id: ${id_userEmpresa} não existe!`);
+            res.status(404).json({message:`Empresa com esse id: ${id_userEmpresa} não existe!`});
         } else {
             res.status(200).json(usuarioExistente)
         }

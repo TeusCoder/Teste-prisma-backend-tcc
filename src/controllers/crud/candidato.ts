@@ -23,11 +23,11 @@ async function createCandidato(req: Request, res: Response) {
             where: { id_endereco }
         });
         if (!VerificaEndereco) {
-            return res.status(404).json({ error: 'Endereço não encontrado.' });
+            return res.status(404).json({ message: 'Endereço não encontrado.' });
         };
 
         const VerificaUser = await Candidato.user.findUnique({where: {id_user}});
-        if(!VerificaUser) {return res.status(404).end("User não encontrado")};
+        if(!VerificaUser) {return res.status(404).json({message :"User não encontrado"})};
 
         const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { cpf } });
         // se o usuario não existe vai criar, se existe vai dar erro e mostrar o cpf
@@ -43,9 +43,9 @@ async function createCandidato(req: Request, res: Response) {
                     telefone,
                 }
             })
-            res.status(201).json(createdCandidato);
+            res.status(201).json({message: `candidato: ${createdCandidato}, criado com sucesso!`});
         } else {
-            res.status(400).send(`Usuario com esse cpf: ${cpf} já existe!`);
+            res.status(400).json({message: `Usuario com esse cpf: ${cpf} já existe!`});
         }
     }
     catch (error) {
@@ -76,7 +76,7 @@ async function createCandidato(req: Request, res: Response) {
 async function findAllCandidatos(req: Request, res: Response) {
     try {
         const candidatos = await Candidato.userCandidato.findMany();
-        res.status(200).json(candidatos);
+        res.status(200).json({message: `${candidatos}`});
     } catch (error) {
         console.log(error);
     }
@@ -86,11 +86,11 @@ async function findOneCandidato(req: Request, res: Response) {
     try {
         const { id_userCandidato } = req.params;
         if (!id_userCandidato) {
-            return res.status(404).end("Digite um id valido!");
+            return res.status(404).json({message: "Digite um id valido!"});
         }
         const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { id_userCandidato } });
         if (!usuarioExistente) {
-            res.status(404).send(`Usuario com esse id: ${id_userCandidato} não existe!`);
+            res.status(404).json({message:`Usuario com esse id: ${id_userCandidato} não existe!`});
         }
         else {
             res.status(200).json(usuarioExistente);

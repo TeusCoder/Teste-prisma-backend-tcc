@@ -68,7 +68,7 @@ async function findOneVaga(req: Request, res: Response) {
             where: { id_vaga }
         })
         if (!VagaExistente) {
-            res.status(404).send("Vaga não encontrada");
+            res.status(404).json({message: "Vaga não encontrada"});
         } else {
             res.status(200).json(VagaExistente)
         }
@@ -81,10 +81,10 @@ async function deleteVaga(req: Request, res: Response) {
     try {
         const {id_vaga} = req.params;
         if(!id_vaga) {
-            res.status(400).send("Verifique o id na url");
+            res.status(400).json({message: "Verifique o id na url"});
         } else {
         const vagaDeletada = await Vaga.vaga.delete({ where: { id_vaga } })
-        res.status(200).end("Vaga deletado");
+        res.status(200).json({message: "Vaga deletado"});
         }
     } catch (error) {
         console.log(error);

@@ -40,7 +40,7 @@ app.use("/inscricoes", RouterInscricoes)
 app.use("/criarVagas", RouterCriaVaga)
 app.use("/token", passport.authenticate('jwt', { session: false }), RouterLogin);
 app.use("/login", RouterLogin)
-app.use("/uploads", express.static('uploads'), RouterUploads)
+// app.use("/uploads", express.static('uploads'), RouterUploads)
 app.use("/users", RouterUsers)
 
 

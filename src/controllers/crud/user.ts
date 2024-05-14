@@ -34,7 +34,7 @@ async function createUser(req: Request, res: Response) {
             //retorna o User criado
             res.status(201).json(createdUser);
         } else {
-            res.status(400).end(`User com esse email: ${email} já existe!`);
+            res.status(400).json({message:`User com esse email: ${email} já existe!`});
         }
     } catch (error) {
         console.log(error);
@@ -57,11 +57,11 @@ async function findOneUser(req: Request, res: Response) {
     try {
         const { id_user } = req.params;
         if (!id_user) {
-            return res.status(404).end("Digite id valido");
+            return res.status(404).json({message: "Digite id valido" });
         }
         const UserExistente = await User.user.findUnique({ where: { id_user } });
         if(!UserExistente) {
-        res.status(404).send(`User com esse id: ${id_user} não existe!`);
+        res.status(404).json({message:`User com esse id: ${id_user} não existe!`});
         } else {
             res.status(200).json(UserExistente)
         }
@@ -76,15 +76,15 @@ async function deleteUser(req: Request, res: Response) {
         const { id_user } = req.params;
         //verificar se esta correto o id
         if (!id_user) {
-            return res.status(200).end("Digite um id valido!");
+            return res.status(200).json({message: "Digite um id valido!" });
         }
         const usuarioExistente = await User.user.findUnique({ where: { id_user } });
         if (!usuarioExistente) {
-            res.status(404).send(`Usuario com esse id: ${id_user} não existe!`);
+            res.status(404).json({message:`Usuario com esse id: ${id_user} não existe!`});
         }
         else {
             await User.user.delete({ where: { id_user } })
-            res.status(200).end("usuario deletado");
+            res.status(200).json({message: "usuario deletado"});
         }
     } catch (error) {
         console.log(error)
