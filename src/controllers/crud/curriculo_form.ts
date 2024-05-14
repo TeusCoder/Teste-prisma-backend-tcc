@@ -1,25 +1,54 @@
+import fs from 'fs';
+import crypto from 'crypto';
 
 
 import { PrismaClient } from "@prisma/client";
 import e, { Request, Response } from "express";
 import { CurriculoFormSchema } from "../../dto/validacoes/Curriculo_formValidacao";
 
-// id_userCandidato String @unique 
-// nomeEmpresa String @db.Char(100)
-// cargo String @db.Char(100)
-// periodo String @db.Char(100)
-// realizacoes String @db.Char(255)
-// instituicao String @db.Char(100)
-// grau String @db.Char(100)
-// campoEstudo String @db.Char(100)
-// periodoEstudo String @db.Char(100)
-// competenciasExtracurricular String @db.LongText
-// certificacoes String @db.LongText
-// curriculo_anexo String? @default("SemCV")
-
-const Curriculo = new PrismaClient;
+const Curriculo = new PrismaClient();
 
 async function createCurriculo(req: Request, res: Response) {
+
+    const encryptFile = (entrada: fs.PathLike, saida: fs.PathLike, callback: any) => {
+        const algorithm = 'aes-256-cbc';
+        const key = crypto.randomBytes(32); // Chave de 256 bits
+        const iv = crypto.randomBytes(16); // Vetor de inicialização de 16 bytes
+
+        const cipher = crypto.createCipheriv(algorithm, key, iv);
+        const input = fs.createReadStream(entrada);
+        const output = fs.createWriteStream(saida);
+
+        input.pipe(cipher).pipe(output);
+
+        output.on('finish', () => {
+            callback(null, { key: key.toString('hex'), iv: iv.toString('hex') });
+        });
+
+        output.on('error', (err) => {
+            callback(err);
+        });
+    };
+
+    const uploadFile = async (req: { file: { path: any; }; body: { id_userCandidato: any; nomeEmpresa: any; cargo: any; periodo: any; realizacoes: any; instituicao: any; grau: any; campoEstudo: any; periodoEstudo: any; competenciasExtracurricular: any; certificacoes: any; }; }, res: Response) => {
+        const filePath = req.file.path;
+        const encryptedFilePath = filePath + '.enc';
+
+        encryptFile(filePath, encryptedFilePath, async (err: any, encryptionInfo: any) => {
+            if (err) {
+                console.error('Erro ao criptografar o arquivo:', err);
+                return res.status(500).send('Erro ao criptografar o arquivo');
+            }
+
+            fs.unlink(filePath, async (err) => {
+                if (err) {
+                    console.error('Erro ao excluir o arquivo original:', err);
+                    return res.status(500).send('Erro ao excluir o arquivo original');
+                }
+            })
+        })
+    };
+
     try {
         const {
             id_userCandidato,
@@ -32,12 +61,18 @@ async function createCurriculo(req: Request, res: Response) {
             campoEstudo,
             periodoEstudo,
             competenciasExtracurricular,
-            certificacoes,
-            curriculo_anexo
+            certificacoes
         } = req.body;
         //verificação pelo zod
-        CurriculoFormSchema.parse({id_userCandidato,nomeEmpresa,cargo,periodo,realizacoes,instituicao,
-            grau,campoEstudo,periodoEstudo,competenciasExtracurricular,certificacoes, curriculo_anexo});
+        CurriculoFormSchema.parse({
+            id_userCandidato, nomeEmpresa, cargo, periodo, realizacoes, instituicao,
+            grau, campoEstudo, periodoEstudo, competenciasExtracurricular, certificacoes
+        });
+
+
+        const uploadFile = async (req: { file: { path: any; }; body: { id_userCandidato: any; nomeEmpresa: any; cargo: any; periodo: any; realizacoes: any; instituicao: any; grau: any; campoEstudo: any; periodoEstudo: any; competenciasExtracurricular: any; certificacoes: any; }; }, res: Response) => {
+            const filePath = req.file.path;
+            const encryptedFilePath = filePath + '.enc';
 
         const createdCurriculo = await Curriculo.curriculo_form.create({
             data: {
@@ -52,13 +87,15 @@ async function createCurriculo(req: Request, res: Response) {
                 periodoEstudo,
                 competenciasExtracurricular,
                 certificacoes,
-                curriculo_anexo
+                curriculo_anexo: encryptedFilePath
             }
-        });
-        res.status(201).json(createdCurriculo);
+        })
+    };
+        res.status(201).json({ message: 'Arquivo enviado, criptografado e caminho salvo com sucesso'});
     } catch (error) {
-        console.log(error);
+        console.log('Erro ao salvar no banco de dados', error);
     }
+    module.exports = { uploadFile };
 }
 
 // async function updateCurriculo(req: Request, res: Response) {
