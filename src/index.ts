@@ -26,6 +26,8 @@ app.use(cors({
     "optionsSuccessStatus": 204
 }))
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 app.get('/', (_req, res) => {
     res.status(200).json({ response: 'Servidor rodando.' })
@@ -40,7 +42,7 @@ app.use("/inscricoes", RouterInscricoes)
 app.use("/criarVagas", RouterCriaVaga)
 app.use("/token", passport.authenticate('jwt', { session: false }), RouterLogin);
 app.use("/login", RouterLogin)
-// app.use("/uploads", express.static('uploads'), RouterUploads)
+app.use("/uploads", express.static('uploads'), RouterUploads)
 app.use("/users", RouterUsers)
 
 

@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { candidatoVagaSchema } from "../../dto/validacoes/CandidadoVagaValidacao";
+import { z } from "zod";
 
 const InscricaoCandVaga = new PrismaClient()
 
@@ -43,15 +44,27 @@ async function CreateInscricaoCandVaga(req: Request, res: Response) {
 async function updateInscricao(req: Request, res: Response) {
     try {
         const { id_inscricao } = req.params;
-        const { dataInscricao } = req.body;
+        const updateData = req.body;
+
+        const schema = z.object({
+            id_userCandidato: z.string().uuid(),
+            id_vaga: z.string().uuid(),
+            dataInscrica: z.string()
+        }).partial()
+
+        const parsedData = schema.safeParse(updateData);
+        if (!parsedData.success) {
+            return res.status(400).json({ error: parsedData.error.errors });
+        }
 
         const IncricaoUpdated = await InscricaoCandVaga.candidatoVaga.update({
             where: { id_inscricao },
-            data: { dataInscricao }
+            data: parsedData.data,
         });
         res.status(200).json(IncricaoUpdated);
     } catch (error) {
         console.log(error);
+        res.status(500).json({ error: 'Erro ao atualizar a Vaga Candidato' });
     }
 }
 

@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { VagaSchema } from "../../dto/validacoes/VagaValidacao";
+import { z } from "zod";
 
 const Vaga = new PrismaClient();
 
@@ -16,7 +17,7 @@ async function createVaga(req: Request, res: Response) {
 
         } = req.body;
         //validacao pelo zod
-        VagaSchema.parse({titulo,categoria, descricao,requisitos,dataAbertura: new Date(dataAbertura).toISOString(), dataFechamento: new Date(dataFechamento).toISOString() });
+        VagaSchema.parse({ titulo, categoria, descricao, requisitos, dataAbertura: new Date(dataAbertura).toISOString(), dataFechamento: new Date(dataFechamento).toISOString() });
 
 
         const createdVaga = await Vaga.vaga.create({
@@ -25,8 +26,8 @@ async function createVaga(req: Request, res: Response) {
                 categoria,
                 descricao,
                 requisitos,
-                dataAbertura : new Date(dataAbertura).toISOString(),
-                dataFechamento : new Date(dataFechamento).toISOString(),
+                dataAbertura: new Date(dataAbertura).toISOString(),
+                dataFechamento: new Date(dataFechamento).toISOString(),
             }
         });
         res.status(201).json(createdVaga);
@@ -39,16 +40,30 @@ async function updateVaga(req: Request, res: Response) {
     try {
         //pegar o id pelo params
         const { id_vaga } = req.params;
-        //atributo a ser mudado
-        const { descricao } = req.body;
+        const updateData = req.body;
+
+        const schema = z.object({
+            titulo: z.string().min(1),
+            categoria: z.string().min(1),
+            descricao: z.string().min(1),
+            requisitos: z.string().min(1),
+            dataAbertura: z.string(),
+            dataFechamento: z.string(),
+        }).partial();
+
+        const parsedData = schema.safeParse(updateData);
+        if (!parsedData.success) {
+            return res.status(400).json({ error: parsedData.error.errors });
+        }
 
         const VagaUpdated = await Vaga.vaga.update({
             where: { id_vaga },
-            data: { descricao }
+            data: parsedData.data,
         });
         res.status(200).json(VagaUpdated);
     } catch (error) {
         console.log(error);
+        res.status(500).json({ error: 'Erro ao atualizar a vaga' });
     }
 }
 
@@ -68,7 +83,7 @@ async function findOneVaga(req: Request, res: Response) {
             where: { id_vaga }
         })
         if (!VagaExistente) {
-            res.status(404).json({message: "Vaga não encontrada"});
+            res.status(404).json({ message: "Vaga não encontrada" });
         } else {
             res.status(200).json(VagaExistente)
         }
@@ -79,16 +94,16 @@ async function findOneVaga(req: Request, res: Response) {
 
 async function deleteVaga(req: Request, res: Response) {
     try {
-        const {id_vaga} = req.params;
-        if(!id_vaga) {
-            res.status(400).json({message: "Verifique o id na url"});
+        const { id_vaga } = req.params;
+        if (!id_vaga) {
+            res.status(400).json({ message: "Verifique o id na url" });
         } else {
-        const vagaDeletada = await Vaga.vaga.delete({ where: { id_vaga } })
-        res.status(200).json({message: "Vaga deletado"});
+            const vagaDeletada = await Vaga.vaga.delete({ where: { id_vaga } })
+            res.status(200).json({ message: "Vaga deletado" });
         }
     } catch (error) {
         console.log(error);
     }
 }
 
-export {createVaga, updateVaga, findAllVagas, findOneVaga,deleteVaga}
+export { createVaga, updateVaga, findAllVagas, findOneVaga, deleteVaga }

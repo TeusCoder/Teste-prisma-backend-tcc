@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { EmpresaSchema } from "../../dto/validacoes/EmpresaValidacao";
+import { z } from "zod";
 
 const Empresa = new PrismaClient()
 
@@ -50,21 +51,37 @@ async function CreateEmpresa(req: Request, res: Response) {
         console.log(error);
     }
 }
-// //atualizar empresa
-// //passar no req.body e no data os atributos a serem mudados
-// async function UpdateEmpresa(req: Request, res: Response) {
-//     try {
-//         const { id_userEmpresa } = req.params;
-//         const { nome_fantasia } = req.body;
-//         const EmpresaUpdated = await Empresa.userEmpresa.update({
-//             where: { id_userEmpresa },
-//             data: { nome_fantasia }
-//         });
-//         res.status(200).json(EmpresaUpdated);
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
+//atualizar empresa
+async function UpdateEmpresa(req: Request, res: Response) {
+    try {
+        const { id_userEmpresa } = req.params;
+        const updateData = req.body;
+
+        const schema = z.object({
+            id_user: z.string().uuid(),
+            id_endereco: z.string().uuid(),
+            razaoSocial: z.string().min(1),
+            nome_fantasia: z.string().min(1),
+            cnpj: z.string().length(14),
+            ie: z.string().min(9),
+            telefone: z.string().length(11),
+        }).partial();
+
+        const parsedData = schema.safeParse(updateData);
+        if (!parsedData.success) {
+            return res.status(400).json({ error: parsedData.error.errors });
+        }
+
+        const EmpresaUpdated = await Empresa.userEmpresa.update({
+            where: { id_userEmpresa },
+            data: parsedData.data,
+        });
+        res.status(200).json(EmpresaUpdated);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Erro ao atualizar a empresa' });
+    }
+}
 
 async function findAllEmpresas(req: Request, res: Response) {
     try {
@@ -92,5 +109,5 @@ async function findOneEmpresa(req: Request, res: Response) {
     }
 }
 
-export { CreateEmpresa, findAllEmpresas, findOneEmpresa }
+export { CreateEmpresa,UpdateEmpresa, findAllEmpresas, findOneEmpresa }
 

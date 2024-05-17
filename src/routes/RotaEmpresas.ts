@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { CreateEmpresa, findAllEmpresas, findOneEmpresa } from "../controllers/crud/empresa";
+import { CreateEmpresa,UpdateEmpresa, findAllEmpresas, findOneEmpresa } from "../controllers/crud/empresa";
 
 const route = Router();
 
 route.post("/", CreateEmpresa)
-// route.put("/update/:id_userEmpresa", UpdateEmpresa)
+route.put("/update/:id_userEmpresa", UpdateEmpresa)
 route.get("/findAll", findAllEmpresas)
 route.get("/findOne/:id_userEmpresa",findOneEmpresa)
 

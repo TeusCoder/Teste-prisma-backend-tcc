@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { candidatoSchema } from "../../dto/validacoes/CandidatoValidacao";
+import { z } from "zod";
 
 
 const Candidato = new PrismaClient()
@@ -17,7 +18,7 @@ async function createCandidato(req: Request, res: Response) {
             telefone,
         } = req.body;
         //verificação pelo zod
-        candidatoSchema.parse({ id_user, id_endereco, nome, sobrenome, cpf, dataNascimento:new Date(dataNascimento).toISOString(), telefone });
+        candidatoSchema.parse({ id_user, id_endereco, nome, sobrenome, cpf, dataNascimento: new Date(dataNascimento).toISOString(), telefone });
         //verificar endereco e /user
         const VerificaEndereco = await Candidato.endereco.findUnique({
             where: { id_endereco }
@@ -26,8 +27,8 @@ async function createCandidato(req: Request, res: Response) {
             return res.status(404).json({ message: 'Endereço não encontrado.' });
         };
 
-        const VerificaUser = await Candidato.user.findUnique({where: {id_user}});
-        if(!VerificaUser) {return res.status(404).json({message :"User não encontrado"})};
+        const VerificaUser = await Candidato.user.findUnique({ where: { id_user } });
+        if (!VerificaUser) { return res.status(404).json({ message: "User não encontrado" }) };
 
         const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { cpf } });
         // se o usuario não existe vai criar, se existe vai dar erro e mostrar o cpf
@@ -39,13 +40,13 @@ async function createCandidato(req: Request, res: Response) {
                     nome,
                     sobrenome,
                     cpf,
-                    dataNascimento:new Date(dataNascimento).toISOString() ,
+                    dataNascimento: new Date(dataNascimento).toISOString(),
                     telefone,
                 }
             })
-            res.status(201).json({message: `candidato: ${createdCandidato}, criado com sucesso!`});
+            res.status(201).json({ message: `candidato criado com sucesso!` });
         } else {
-            res.status(400).json({message: `Usuario com esse cpf: ${cpf} já existe!`});
+            res.status(400).json({ message: `Usuario com esse cpf: ${cpf} já existe!` });
         }
     }
     catch (error) {
@@ -54,29 +55,43 @@ async function createCandidato(req: Request, res: Response) {
 }
 
 //atualizar candidato
-//passar no req.body e no data os atributos a serem mudados
-// async function UpdateCandidato(req: Request, res: Response) {
-//     try {
-//         const { id_userCandidato } = req.params;
-//         const Candidato.userCandidato = req.body;
+async function UpdateCandidato(req: Request, res: Response) {
+    try {
+        const { id_userCandidato } = req.params;
+        const updateData = req.body;
 
-//         const UpdatedCandidato = await Candidato.userCandidato.findUnique
-//         const CandidatoUpdated = await Candidato.userCandidato.update({
-//             where: { id_userCandidato },
-//             data: { candidatoFront }
-//         });
-//         res.status(200).json(CandidatoUpdated);
-//     }
-//     catch (error) {
-//         console.log(error);
-//     }
-// }
+        const schema = z.object({
+            id_user: z.string().uuid(),
+            id_endereco: z.string().uuid(),
+            nome: z.string().min(1),
+            sobrenome: z.string().min(1),
+            cpf: z.string().length(11),
+            dataNascimento: z.string(),
+            telefone: z.string().length(11),
+        }).partial();
+
+        const parsedData = schema.safeParse(updateData);
+        if (!parsedData.success) {
+            return res.status(400).json({ error: parsedData.error.errors });
+        }
+
+        const CandidatoUpdated = await Candidato.userCandidato.update({
+            where: { id_userCandidato },
+            data: parsedData.data,
+        });
+        res.status(200).json(CandidatoUpdated);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Erro ao atualizar o candidato' });
+    }
+}
 
 //encontrar todos os candidatos
 async function findAllCandidatos(req: Request, res: Response) {
     try {
         const candidatos = await Candidato.userCandidato.findMany();
-        res.status(200).json({message: `${candidatos}`});
+        res.status(200).json({ candidatos });
     } catch (error) {
         console.log(error);
     }
@@ -84,13 +99,13 @@ async function findAllCandidatos(req: Request, res: Response) {
 //encontrar pelo params pedido
 async function findOneCandidato(req: Request, res: Response) {
     try {
-        const { id_userCandidato } = req.params;
-        if (!id_userCandidato) {
-            return res.status(404).json({message: "Digite um id valido!"});
+        const { id_user } = req.params;
+        if (!id_user) {
+            return res.status(404).json({ message: "Digite um id valido!" });
         }
-        const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { id_userCandidato } });
+        const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { id_user } });
         if (!usuarioExistente) {
-            res.status(404).json({message:`Usuario com esse id: ${id_userCandidato} não existe!`});
+            res.status(404).json({ message: `Candidato não existe!` });
         }
         else {
             res.status(200).json(usuarioExistente);
@@ -101,4 +116,4 @@ async function findOneCandidato(req: Request, res: Response) {
 }
 
 
-export { createCandidato, findAllCandidatos, findOneCandidato }
+export { createCandidato, UpdateCandidato,findAllCandidatos, findOneCandidato }

@@ -1,54 +1,12 @@
-import fs from 'fs';
-import crypto from 'crypto';
-
 
 import { PrismaClient } from "@prisma/client";
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 import { CurriculoFormSchema } from "../../dto/validacoes/Curriculo_formValidacao";
+import { z } from 'zod';
 
 const Curriculo = new PrismaClient();
 
 async function createCurriculo(req: Request, res: Response) {
-
-    const encryptFile = (entrada: fs.PathLike, saida: fs.PathLike, callback: any) => {
-        const algorithm = 'aes-256-cbc';
-        const key = crypto.randomBytes(32); // Chave de 256 bits
-        const iv = crypto.randomBytes(16); // Vetor de inicialização de 16 bytes
-
-        const cipher = crypto.createCipheriv(algorithm, key, iv);
-        const input = fs.createReadStream(entrada);
-        const output = fs.createWriteStream(saida);
-
-        input.pipe(cipher).pipe(output);
-
-        output.on('finish', () => {
-            callback(null, { key: key.toString('hex'), iv: iv.toString('hex') });
-        });
-
-        output.on('error', (err) => {
-            callback(err);
-        });
-    };
-
-    const uploadFile = async (req: { file: { path: any; }; body: { id_userCandidato: any; nomeEmpresa: any; cargo: any; periodo: any; realizacoes: any; instituicao: any; grau: any; campoEstudo: any; periodoEstudo: any; competenciasExtracurricular: any; certificacoes: any; }; }, res: Response) => {
-        const filePath = req.file.path;
-        const encryptedFilePath = filePath + '.enc';
-
-        encryptFile(filePath, encryptedFilePath, async (err: any, encryptionInfo: any) => {
-            if (err) {
-                console.error('Erro ao criptografar o arquivo:', err);
-                return res.status(500).send('Erro ao criptografar o arquivo');
-            }
-
-            fs.unlink(filePath, async (err) => {
-                if (err) {
-                    console.error('Erro ao excluir o arquivo original:', err);
-                    return res.status(500).send('Erro ao excluir o arquivo original');
-                }
-            })
-        })
-    };
-
     try {
         const {
             id_userCandidato,
@@ -63,18 +21,16 @@ async function createCurriculo(req: Request, res: Response) {
             competenciasExtracurricular,
             certificacoes
         } = req.body;
-        //verificação pelo zod
-        CurriculoFormSchema.parse({
-            id_userCandidato, nomeEmpresa, cargo, periodo, realizacoes, instituicao,
-            grau, campoEstudo, periodoEstudo, competenciasExtracurricular, certificacoes
-        });
 
+        CurriculoFormSchema.parse({ id_userCandidato, nomeEmpresa, cargo, periodo, realizacoes, instituicao, grau, campoEstudo, periodoEstudo, competenciasExtracurricular, certificacoes });
 
-        const uploadFile = async (req: { file: { path: any; }; body: { id_userCandidato: any; nomeEmpresa: any; cargo: any; periodo: any; realizacoes: any; instituicao: any; grau: any; campoEstudo: any; periodoEstudo: any; competenciasExtracurricular: any; certificacoes: any; }; }, res: Response) => {
-            const filePath = req.file.path;
-            const encryptedFilePath = filePath + '.enc';
-
-        const createdCurriculo = await Curriculo.curriculo_form.create({
+        const verificaCandidato = await Curriculo.userCandidato.findUnique({
+            where: { id_userCandidato }
+        })
+        if (!verificaCandidato) {
+            return res.status(404).json({ message: 'Candidato não encontrado.' });
+        }
+        const curriculoForm = await Curriculo.curriculo_form.create({
             data: {
                 id_userCandidato,
                 nomeEmpresa,
@@ -86,32 +42,51 @@ async function createCurriculo(req: Request, res: Response) {
                 campoEstudo,
                 periodoEstudo,
                 competenciasExtracurricular,
-                certificacoes,
-                curriculo_anexo: encryptedFilePath
+                certificacoes
             }
-        })
-    };
-        res.status(201).json({ message: 'Arquivo enviado, criptografado e caminho salvo com sucesso'});
+        });
+        res.status(201).json(curriculoForm);
     } catch (error) {
-        console.log('Erro ao salvar no banco de dados', error);
+        console.log(error);
     }
-    module.exports = { uploadFile };
 }
 
-// async function updateCurriculo(req: Request, res: Response) {
-//     try {
-//         const { id_curriculoForm } = req.params;
-//         const { escolaridade } = req.body;
+async function updateCurriculo(req: Request, res: Response) {
+    try {
+        const { id_curriculoForm } = req.params;
+        const updateData = req.body;
 
-//         const curriculoUpdated = await Curriculo.curriculo_form.update({
-//             where: { id_curriculoForm },
-//             data: { escolaridade }
-//         });
-//         res.status(200).json(curriculoUpdated);
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
+        const schema = z.object({
+            nomeEmpresa: z.string().min(1),
+            cargo: z.string().min(1),
+            periodo: z.string().min(1),
+            realizacoes: z.string().min(1),
+            instituicao: z.string().min(1),
+            grau: z.string().min(1),
+            campoEstudo: z.string().min(1),
+            periodoEstudo: z.string().min(1),
+            competenciasExtracurricular: z.string().min(1),
+            certificacoes: z.string().min(1),
+            curriculo_anexo: z.string()
+        }).partial(); // Torna todos os campos opcionais
+
+        const parsedData = schema.safeParse(updateData);
+        if (!parsedData.success) {
+            return res.status(400).json({ error: parsedData.error.errors });
+        }
+
+        const curriculoUpdated = await Curriculo.curriculo_form.update({
+            where: { id_curriculoForm },
+            data: parsedData.data,
+        });
+
+        res.status(200).json(curriculoUpdated);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Erro ao atualizar o currículo' });
+    }
+}
+
 
 async function findAllCurriculos(req: Request, res: Response) {
     try {
@@ -152,4 +127,4 @@ async function deleteCurriculo(req: Request, res: Response) {
     }
 }
 
-export { createCurriculo, findAllCurriculos, findOneCurriculo, deleteCurriculo }
+export { createCurriculo, findAllCurriculos, findOneCurriculo, deleteCurriculo, updateCurriculo }

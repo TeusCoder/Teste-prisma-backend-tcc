@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { CriaVagaSchema } from "../../dto/validacoes/CriarVagaValidacao";
+import { z } from "zod";
 
 const CriaVaga = new PrismaClient();
 
@@ -31,15 +32,27 @@ async function createCriaVaga(req: Request, res: Response) {
 async function updateCriaVaga(req: Request, res: Response) {
     try {
         const { id_criaVaga } = req.params;
-        const { dataCriacao } = req.body;
+        const updateData = req.body;
+
+        const schema = z.object({
+            id_userEmpresa: z.string().uuid(),
+            id_vaga: z.string().uuid(),
+            dataCriacao: z.string()
+        }).partial();
+
+        const parsedData = schema.safeParse(updateData);
+        if (!parsedData.success) {
+            return res.status(400).json({ error: parsedData.error.errors });
+        }
 
         const CriaVagaUpdated = await CriaVaga.criarVaga.update({
             where: { id_criaVaga },
-            data: { dataCriacao }
+            data: parsedData.data,
         });
         res.status(200).json(CriaVagaUpdated);
     } catch (error) {
         console.log(error);
+        res.status(500).json({ error: 'Erro ao atualizar a vaga' });
     }
 }
 
@@ -59,7 +72,7 @@ async function findOneVagaCriada(req: Request, res: Response) {
             where: { id_criaVaga }
         })
         if (!VagaCriada) {
-            res.status(404).json({message: "Vaga não encontrada" });
+            res.status(404).json({ message: "Vaga não encontrada" });
         } else {
             res.status(200).json(VagaCriada);
         }
@@ -72,12 +85,12 @@ async function deleteVagaCriada(req: Request, res: Response) {
     try {
         const { id_criaVaga } = req.params;
         if (!id_criaVaga) {
-            res.status(400).json({message: "Verifique o id na url" });
+            res.status(400).json({ message: "Verifique o id na url" });
         } else {
             await CriaVaga.criarVaga.delete({
                 where: { id_criaVaga }
             });
-            res.status(200).json({message: "vaga deletada" });
+            res.status(200).json({ message: "vaga deletada" });
         }
     } catch (error) {
         console.log(error);

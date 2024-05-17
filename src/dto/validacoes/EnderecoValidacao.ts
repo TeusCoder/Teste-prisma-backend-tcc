@@ -9,4 +9,4 @@ export const EnderecoSchema = z.object({
     complemento : z.string(),
     numero: z.string().min(1),
     cep: z.string().length(8)
-})
+}).partial()

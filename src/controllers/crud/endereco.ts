@@ -2,6 +2,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { EnderecoSchema } from "../../dto/validacoes/EnderecoValidacao";
+import { z } from "zod";
 
 const Endereco = new PrismaClient()
 
@@ -42,16 +43,33 @@ async function UpdateEndereco(req: Request, res: Response) {
     try {
         //pegar o id pelo params
         const { id_endereco } = req.params;
-        //atributo que sera modificado
-        const { estado } = req.body;
+
+        const updateData = req.body;
+
+        const schema = z.object({
+            pais: z.string().min(1),
+            estado: z.string().min(1),
+            cidade: z.string().min(1),
+            bairro: z.string().min(1),
+            logradouro: z.string().min(1),
+            complemento: z.string().min(1),
+            numero: z.string().min(1),
+            cep: z.string().length(8)
+        }).partial();
+
+        const parsedData = schema.safeParse(updateData);
+        if (!parsedData.success) {
+            return res.status(400).json({ error: parsedData.error.errors });
+        }
 
         const EnderecoUpdated = await Endereco.endereco.update({
             where: { id_endereco },
-            data: { estado }
+            data: parsedData.data
         });
         res.status(200).json(EnderecoUpdated);
     } catch (error) {
         console.log(error);
+        res.status(500).json({ error: 'Erro ao atualizar o endereço' });
     }
 }
 
@@ -69,11 +87,11 @@ async function findOneEndereco(req: Request, res: Response) {
     try {
         const { cep } = req.params;
         if (!cep) {
-            return res.status(404).json({message: "digite cep valido" });
+            return res.status(404).json({ message: "digite cep valido" });
         };
         const EnderecoExistente = await Endereco.endereco.findFirst({ where: { cep } })
         if (!EnderecoExistente) {
-            res.status(404).json({ message: "Endereco não existe"});
+            res.status(404).json({ message: "Endereco não existe" });
         } else {
             res.status(200).json(EnderecoExistente)
         }
@@ -86,10 +104,10 @@ async function deleteEndereco(req: Request, res: Response) {
     try {
         const { id_endereco } = req.params;
         if (!id_endereco) {
-            res.status(400).json({message: "Verifique o id na url"});
+            res.status(400).json({ message: "Verifique o id na url" });
         } else {
             await Endereco.endereco.delete({ where: { id_endereco } })
-            res.status(200).json({message: "endereço deletado"});
+            res.status(200).json({ message: "endereço deletado" });
         }
     }
     catch (error) {
