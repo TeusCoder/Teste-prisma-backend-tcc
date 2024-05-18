@@ -39,21 +39,21 @@ async function ValidaLogin(req:Request, res:Response){
             email: String(email),
         },
      });
-        if(!validar){
-            return res.status(404).json({message:'Email inválido'})
-        }
-        const validaSenha = await bcrypt.compare(String(senha), validar.senha);
-        if(!validaSenha){
-            return res.status(401).json({ message: 'Senha incorreta.' });
-        }else{
-            const token = jwt.sign({sub:validar.id_user, type:0 }, jwtSecret,
-                {
-                    expiresIn: '1h'
-                })
-                
-            return res.status(200).json({   message: 'Credenciais válidas.', IdUsuario:validar.id_user,Senha:validar.senha, Tipo:validar.tipo, Status:validar.status, CreatedAt:validar.createdAt, UpdatedAt:validar.updatedAt, token });
-    
-        }
+     if (!validar) {
+        return res.status(404).json({ message: 'Email inválido' })
+    }
+    const validaSenha = await bcrypt.compare(String(senha), validar.senha);
+    if (!validaSenha) {
+        return res.status(401).json({ message: 'Senha incorreta.' });
+    } else {
+        const token = jwt.sign({ sub: validar.id_user, tipo: validar.tipo, type: 0 }, jwtSecret,
+            {
+                expiresIn: '1h'
+            })
+
+        return res.status(200).json({ message: 'Credenciais válidas.', IdUsuario: validar.id_user, Senha: validar.senha, Tipo: validar.tipo, Status: validar.status, CreatedAt: validar.createdAt, UpdatedAt: validar.updatedAt, token });
+
+    }
 
         }catch(error){
             console.error(error);

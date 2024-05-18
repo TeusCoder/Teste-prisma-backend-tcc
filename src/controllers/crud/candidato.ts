@@ -33,7 +33,7 @@ async function createCandidato(req: Request, res: Response) {
         const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { cpf } });
         // se o usuario não existe vai criar, se existe vai dar erro e mostrar o cpf
         if (!usuarioExistente) {
-            const createdCandidato = await Candidato.userCandidato.create({
+            await Candidato.userCandidato.create({
                 data: {
                     id_user,
                     id_endereco,
