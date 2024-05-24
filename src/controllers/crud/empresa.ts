@@ -29,6 +29,9 @@ async function CreateEmpresa(req: Request, res: Response) {
         const VerificaUser = await Empresa.user.findUnique({where: {id_user}});
         if(!VerificaUser) {return res.status(404).json({message: "User não encontrado"})};
 
+        const verificaId = await Empresa.user.findUnique({where: ie});
+        if(verificaId) {return res.status(400).json({message: "empresa com esse id ja existe"})};
+
         const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { cnpj } });
 
         if (!usuarioExistente) {
