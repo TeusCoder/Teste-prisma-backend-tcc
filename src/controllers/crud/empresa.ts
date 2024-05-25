@@ -29,12 +29,11 @@ async function CreateEmpresa(req: Request, res: Response) {
         const VerificaUser = await Empresa.user.findUnique({where: {id_user}});
         if(!VerificaUser) {return res.status(404).json({message: "User não encontrado"})};
 
-        const verificaId = await Empresa.user.findUnique({where: ie});
-        if(verificaId) {return res.status(400).json({message: "empresa com esse id ja existe"})};
+        const verificaIe = await Empresa.userEmpresa.findUnique({where: {ie}});
 
-        const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { cnpj } });
+        const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { cnpj} });
 
-        if (!usuarioExistente) {
+        if (!usuarioExistente && !verificaIe) {
             const createdEmpresa = await Empresa.userEmpresa.create({
                 data: {
                     id_user,
@@ -47,9 +46,11 @@ async function CreateEmpresa(req: Request, res: Response) {
                 }
             })
             res.status(201).json(createdEmpresa);
-        } else {
-            res.status(400).json({message: `Usuario com esse cpf: ${cnpj} já existe!`});
+        } 
+        else if (usuarioExistente || verificaIe) {
+            res.status(400).json({message: "empresa ja existe"});
         }
+
     } catch (error) {
         console.log(error);
     }
