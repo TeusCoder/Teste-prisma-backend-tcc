@@ -23,7 +23,7 @@ async function createCriaVaga(req: Request, res: Response) {
                 dataCriacao: new Date(dataCriacao).toISOString()
             }
         });
-        res.status(201).json(createdCriaVaga);
+        return res.status(201).json(createdCriaVaga);
     } catch (error) {
         console.log(error);
     }
@@ -49,17 +49,17 @@ async function updateCriaVaga(req: Request, res: Response) {
             where: { id_criaVaga },
             data: parsedData.data,
         });
-        res.status(200).json(CriaVagaUpdated);
+        return res.status(200).json(CriaVagaUpdated);
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: 'Erro ao atualizar a vaga' });
+        return res.status(500).json({ error: 'Erro ao atualizar a vaga' });
     }
 }
 
 async function findAllCriaVaga(req: Request, res: Response) {
     try {
         const VagasCriadas = await CriaVaga.criarVaga.findMany();
-        res.status(200).json(VagasCriadas);
+        return res.status(200).json(VagasCriadas);
     } catch (error) {
         console.log(error);
     }
@@ -72,9 +72,9 @@ async function findOneVagaCriada(req: Request, res: Response) {
             where: { id_criaVaga }
         })
         if (!VagaCriada) {
-            res.status(404).json({ message: "Vaga não encontrada" });
+            return res.status(404).json({ message: "Vaga não encontrada" });
         } else {
-            res.status(200).json(VagaCriada);
+            return res.status(200).json(VagaCriada);
         }
     } catch (error) {
         console.log(error);
@@ -85,12 +85,12 @@ async function deleteVagaCriada(req: Request, res: Response) {
     try {
         const { id_criaVaga } = req.params;
         if (!id_criaVaga) {
-            res.status(400).json({ message: "Verifique o id na url" });
+            return res.status(400).json({ message: "Verifique o id na url" });
         } else {
             await CriaVaga.criarVaga.delete({
                 where: { id_criaVaga }
             });
-            res.status(200).json({ message: "vaga deletada" });
+            return res.status(200).json({ message: "vaga deletada" });
         }
     } catch (error) {
         console.log(error);

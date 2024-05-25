@@ -33,9 +33,9 @@ async function createUser(req: Request, res: Response) {
                 }
             });
             //retorna o User criado
-            res.status(201).json(createdUser);
+            return res.status(201).json(createdUser);
         } else {
-            res.status(400).json({ message: `User com esse email: ${email} já existe!` });
+            return res.status(400).json({ message: `User com esse email: ${email} já existe!` });
         }
     } catch (error) {
         console.log(error);
@@ -59,14 +59,14 @@ async function updateUser(req: Request, res: Response) {
         }
 
         const userUpdated = await User.user.update({
-            where: {id_user},
+            where: { id_user },
             data: parsedData.data,
         });
 
-        res.status(200).json(userUpdated);
+        return res.status(200).json(userUpdated);
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: 'Erro ao atualizar o user' });
+        return res.status(500).json({ error: 'Erro ao atualizar o user' });
 
     }
 }
@@ -75,7 +75,7 @@ async function updateUser(req: Request, res: Response) {
 async function findAllUsers(req: Request, res: Response) {
     try {
         const Users = await User.user.findMany();
-        res.status(200).json(Users);
+        return res.status(200).json(Users);
     } catch (error) {
         console.log(error);
     }
@@ -89,9 +89,9 @@ async function findOneUser(req: Request, res: Response) {
         }
         const UserExistente = await User.user.findUnique({ where: { id_user } });
         if (!UserExistente) {
-            res.status(404).json({ message: `User com esse id: ${id_user} não existe!` });
+            return res.status(404).json({ message: `User com esse id: ${id_user} não existe!` });
         } else {
-            res.status(200).json(UserExistente)
+            return res.status(200).json(UserExistente)
         }
     } catch (error) {
         console.log(error)
@@ -108,16 +108,16 @@ async function deleteUser(req: Request, res: Response) {
         }
         const usuarioExistente = await User.user.findUnique({ where: { id_user } });
         if (!usuarioExistente) {
-            res.status(404).json({ message: `Usuario com esse id: ${id_user} não existe!` });
+            return res.status(404).json({ message: `Usuario com esse id: ${id_user} não existe!` });
         }
         else {
             await User.user.delete({ where: { id_user } })
-            res.status(200).json({ message: "usuario deletado" });
+            return res.status(200).json({ message: "usuario deletado" });
         }
     } catch (error) {
         console.log(error)
     }
 }
 
-export { createUser,updateUser, findOneUser, findAllUsers, deleteUser }
+export { createUser, updateUser, findOneUser, findAllUsers, deleteUser }
 

@@ -26,12 +26,12 @@ async function CreateEmpresa(req: Request, res: Response) {
         if (!VerificaEndereco) {
             return res.status(404).json({ message: 'Endereço não encontrado.' });
         };
-        const VerificaUser = await Empresa.user.findUnique({where: {id_user}});
-        if(!VerificaUser) {return res.status(404).json({message: "User não encontrado"})};
+        const VerificaUser = await Empresa.user.findUnique({ where: { id_user } });
+        if (!VerificaUser) { return res.status(404).json({ message: "User não encontrado" }) };
 
-        const verificaIe = await Empresa.userEmpresa.findUnique({where: {ie}});
+        const verificaIe = await Empresa.userEmpresa.findUnique({ where: { ie } });
 
-        const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { cnpj} });
+        const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { cnpj } });
 
         if (!usuarioExistente && !verificaIe) {
             const createdEmpresa = await Empresa.userEmpresa.create({
@@ -45,10 +45,10 @@ async function CreateEmpresa(req: Request, res: Response) {
                     telefone,
                 }
             })
-            res.status(201).json(createdEmpresa);
-        } 
+            return res.status(201).json(createdEmpresa);
+        }
         else if (usuarioExistente || verificaIe) {
-            res.status(400).json({message: "empresa ja existe"});
+            return res.status(400).json({ message: "empresa ja existe" });
         }
 
     } catch (error) {
@@ -80,17 +80,17 @@ async function UpdateEmpresa(req: Request, res: Response) {
             where: { id_userEmpresa },
             data: parsedData.data,
         });
-        res.status(200).json(EmpresaUpdated);
+        return res.status(200).json(EmpresaUpdated);
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: 'Erro ao atualizar a empresa' });
+        return res.status(500).json({ error: 'Erro ao atualizar a empresa' });
     }
 }
 
 async function findAllEmpresas(req: Request, res: Response) {
     try {
         const empresas = await Empresa.userEmpresa.findMany();
-        res.status(200).json(empresas);
+        return res.status(200).json(empresas);
     } catch (error) {
         console.log(error);
     }
@@ -100,18 +100,18 @@ async function findOneEmpresa(req: Request, res: Response) {
     try {
         const { id_userEmpresa } = req.params;
         if (!id_userEmpresa) {
-            return res.status(404).json({message: "Digite um id válido!"});
+            return res.status(404).json({ message: "Digite um id válido!" });
         }
         const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { id_userEmpresa } });
         if (!usuarioExistente) {
-            res.status(404).json({message:`Empresa com esse id: ${id_userEmpresa} não existe!`});
+            return res.status(404).json({ message: `Empresa com esse id: ${id_userEmpresa} não existe!` });
         } else {
-            res.status(200).json(usuarioExistente)
+            return res.status(200).json(usuarioExistente)
         }
     } catch (error) {
         console.log(error);
     }
 }
 
-export { CreateEmpresa,UpdateEmpresa, findAllEmpresas, findOneEmpresa }
+export { CreateEmpresa, UpdateEmpresa, findAllEmpresas, findOneEmpresa }
 

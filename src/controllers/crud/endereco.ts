@@ -66,17 +66,17 @@ async function UpdateEndereco(req: Request, res: Response) {
             where: { id_endereco },
             data: parsedData.data
         });
-        res.status(200).json(EnderecoUpdated);
+        return res.status(200).json(EnderecoUpdated);
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: 'Erro ao atualizar o endereço' });
+        return res.status(500).json({ error: 'Erro ao atualizar o endereço' });
     }
 }
 
 async function findAllEnderecos(req: Request, res: Response) {
     try {
         const Enderecos = await Endereco.endereco.findMany();
-        res.status(200).json(Enderecos);
+        return res.status(200).json(Enderecos);
 
     } catch (error) {
         console.log(error);
@@ -104,10 +104,10 @@ async function deleteEndereco(req: Request, res: Response) {
     try {
         const { id_endereco } = req.params;
         if (!id_endereco) {
-            res.status(400).json({ message: "Verifique o id na url" });
+            return res.status(400).json({ message: "Verifique o id na url" });
         } else {
             await Endereco.endereco.delete({ where: { id_endereco } })
-            res.status(200).json({ message: "endereço deletado" });
+            return res.status(200).json({ message: "endereço deletado" });
         }
     }
     catch (error) {

@@ -44,9 +44,9 @@ async function createCandidato(req: Request, res: Response) {
                     telefone,
                 }
             })
-            res.status(201).json({ message: `candidato criado com sucesso!` });
+            return res.status(201).json({ message: `candidato criado com sucesso!` });
         } else {
-            res.status(400).json({ message: `Usuario com esse cpf: ${cpf} já existe!` });
+            return res.status(400).json({ message: `Usuario com esse cpf: ${cpf} já existe!` });
         }
     }
     catch (error) {
@@ -79,11 +79,11 @@ async function UpdateCandidato(req: Request, res: Response) {
             where: { id_userCandidato },
             data: parsedData.data,
         });
-        res.status(200).json(CandidatoUpdated);
+        return res.status(200).json(CandidatoUpdated);
     }
     catch (error) {
         console.log(error);
-        res.status(500).json({ error: 'Erro ao atualizar o candidato' });
+        return res.status(500).json({ error: 'Erro ao atualizar o candidato' });
     }
 }
 
@@ -91,7 +91,7 @@ async function UpdateCandidato(req: Request, res: Response) {
 async function findAllCandidatos(req: Request, res: Response) {
     try {
         const candidatos = await Candidato.userCandidato.findMany();
-        res.status(200).json({ candidatos });
+        return res.status(200).json({ candidatos });
     } catch (error) {
         console.log(error);
     }
@@ -105,10 +105,10 @@ async function findOneCandidato(req: Request, res: Response) {
         }
         const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { id_user } });
         if (!usuarioExistente) {
-            res.status(404).json({ message: `Candidato não existe!` });
+            return res.status(404).json({ message: `Candidato não existe!` });
         }
         else {
-            res.status(200).json(usuarioExistente);
+            return res.status(200).json(usuarioExistente);
         }
     } catch (error) {
         console.log(error);
@@ -116,4 +116,4 @@ async function findOneCandidato(req: Request, res: Response) {
 }
 
 
-export { createCandidato, UpdateCandidato,findAllCandidatos, findOneCandidato }
+export { createCandidato, UpdateCandidato, findAllCandidatos, findOneCandidato }

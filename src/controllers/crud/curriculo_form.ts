@@ -45,7 +45,7 @@ async function createCurriculo(req: Request, res: Response) {
                 certificacoes
             }
         });
-        res.status(201).json(curriculoForm);
+        return res.status(201).json(curriculoForm);
     } catch (error) {
         console.log(error);
     }
@@ -80,10 +80,10 @@ async function updateCurriculo(req: Request, res: Response) {
             data: parsedData.data,
         });
 
-        res.status(200).json(curriculoUpdated);
+        return res.status(200).json(curriculoUpdated);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Erro ao atualizar o currículo' });
+        return res.status(500).json({ error: 'Erro ao atualizar o currículo' });
     }
 }
 
@@ -91,7 +91,7 @@ async function updateCurriculo(req: Request, res: Response) {
 async function findAllCurriculos(req: Request, res: Response) {
     try {
         const Curriculos = await Curriculo.curriculo_form.findMany();
-        res.status(200).json(Curriculos);
+        return res.status(200).json(Curriculos);
     } catch (error) {
         console.log(error);
     }
@@ -104,9 +104,9 @@ async function findOneCurriculo(req: Request, res: Response) {
             where: { id_curriculoForm }
         })
         if (!CurriculoExistente) {
-            res.status(404).send("CV não encontrado");
+            return res.status(404).send("CV não encontrado");
         } else {
-            res.status(200).json(CurriculoExistente)
+            return res.status(200).json(CurriculoExistente)
         }
     } catch (error) {
         console.log(error);
@@ -117,10 +117,10 @@ async function deleteCurriculo(req: Request, res: Response) {
     try {
         const { id_curriculoForm } = req.params;
         if (!id_curriculoForm) {
-            res.status(400).send("Verifique o id na url");
+            return res.status(400).send("Verifique o id na url");
         } else {
             const CvDeletado = await Curriculo.curriculo_form.delete({ where: { id_curriculoForm } })
-            res.status(200).end("CV deletado");
+            return res.status(200).end("CV deletado");
         }
     } catch (error) {
         console.log(error);

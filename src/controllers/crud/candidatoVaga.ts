@@ -32,10 +32,10 @@ async function CreateInscricaoCandVaga(req: Request, res: Response) {
             data: {
                 id_userCandidato,
                 id_vaga,
-                dataInscricao:new Date(dataInscricao).toISOString()
+                dataInscricao: new Date(dataInscricao).toISOString()
             }
         });
-        res.status(201).json(createdInscricao);
+        return res.status(201).json(createdInscricao);
     } catch (error) {
         console.log(error)
     }
@@ -61,17 +61,17 @@ async function updateInscricao(req: Request, res: Response) {
             where: { id_inscricao },
             data: parsedData.data,
         });
-        res.status(200).json(IncricaoUpdated);
+        return res.status(200).json(IncricaoUpdated);
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: 'Erro ao atualizar a Vaga Candidato' });
+        return res.status(500).json({ error: 'Erro ao atualizar a Vaga Candidato' });
     }
 }
 
 async function findAllInscricoes(req: Request, res: Response) {
     try {
         const Inscricoes = await InscricaoCandVaga.candidatoVaga.findMany();
-        res.status(200).json(Inscricoes);
+        return res.status(200).json(Inscricoes);
     } catch (error) {
         console.log(error);
     }
@@ -84,9 +84,9 @@ async function findOneInscricao(req: Request, res: Response) {
             where: { id_inscricao }
         })
         if (!InscricaoExistente) {
-            res.status(404).json({message: "Inscricao não encontrada"});
+            return res.status(404).json({ message: "Inscricao não encontrada" });
         } else {
-            res.status(200).json(InscricaoExistente);
+            return res.status(200).json(InscricaoExistente);
         }
     } catch (error) {
         console.log(error);
@@ -97,12 +97,12 @@ async function deleteInscricao(req: Request, res: Response) {
     try {
         const { id_inscricao } = req.params;
         if (!id_inscricao) {
-            res.status(400).json({message: "Verifique o id na url" });
+            return res.status(400).json({ message: "Verifique o id na url" });
         } else {
             await InscricaoCandVaga.candidatoVaga.delete({
                 where: { id_inscricao }
             });
-            res.status(200).json({message: "inscricao deletada" });
+            return res.status(200).json({ message: "inscricao deletada" });
         }
     } catch (error) {
         console.log(error);
