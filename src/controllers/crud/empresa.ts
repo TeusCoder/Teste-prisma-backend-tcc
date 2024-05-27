@@ -30,7 +30,6 @@ async function CreateEmpresa(req: Request, res: Response) {
         if (!VerificaUser) { return res.status(404).json({ message: "User não encontrado" }) };
 
         const verificaIe = await Empresa.userEmpresa.findUnique({ where: { ie } });
-        if (!verificaIe) { return res.status(404).json({ message: "Empresa com IE ja registrada" }) };
 
         const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { cnpj } });
 
