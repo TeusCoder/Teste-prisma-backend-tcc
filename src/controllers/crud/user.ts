@@ -48,9 +48,11 @@ async function updateUser(req: Request, res: Response) {
         const { id_user } = req.params;
         const updateData = req.body;
 
-        const schema = z.object({
-            email: z.string().email(),
-            tipo: z.string().min(1),
+        const schema = z.object({ 
+            email : z.string().email(),
+            senha : z.string().min(3),
+            tipo : z.string(),
+            status : z.number()
         }).partial();
 
         const parsedData = schema.safeParse(updateData);
