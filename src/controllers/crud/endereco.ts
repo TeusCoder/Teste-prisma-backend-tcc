@@ -59,7 +59,7 @@ async function UpdateEndereco(req: Request, res: Response) {
 
         const parsedData = schema.safeParse(updateData);
         if (!parsedData.success) {
-            return res.status(400).json({ error: parsedData.error.errors });
+            return res.status(409).json({ error: parsedData.error.errors });
         }
 
         const EnderecoUpdated = await Endereco.endereco.update({
@@ -104,7 +104,7 @@ async function deleteEndereco(req: Request, res: Response) {
     try {
         const { id_endereco } = req.params;
         if (!id_endereco) {
-            return res.status(400).json({ message: "Verifique o id na url" });
+            return res.status(409).json({ message: "Verifique o id na url" });
         } else {
             await Endereco.endereco.delete({ where: { id_endereco } })
             return res.status(200).json({ message: "endereço deletado" });

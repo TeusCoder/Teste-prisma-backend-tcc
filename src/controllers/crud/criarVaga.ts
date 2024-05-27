@@ -85,7 +85,7 @@ async function deleteVagaCriada(req: Request, res: Response) {
     try {
         const { id_criaVaga } = req.params;
         if (!id_criaVaga) {
-            return res.status(400).json({ message: "Verifique o id na url" });
+            return res.status(409).json({ message: "Verifique o id na url" });
         } else {
             await CriaVaga.criarVaga.delete({
                 where: { id_criaVaga }

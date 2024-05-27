@@ -97,7 +97,7 @@ async function deleteInscricao(req: Request, res: Response) {
     try {
         const { id_inscricao } = req.params;
         if (!id_inscricao) {
-            return res.status(400).json({ message: "Verifique o id na url" });
+            return res.status(409).json({ message: "Verifique o id na url" });
         } else {
             await InscricaoCandVaga.candidatoVaga.delete({
                 where: { id_inscricao }

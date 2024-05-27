@@ -46,7 +46,7 @@ async function createCandidato(req: Request, res: Response) {
             })
             return res.status(201).json({ message: `candidato criado com sucesso!` });
         } else {
-            return res.status(400).json({ message: `Usuario com esse cpf: ${cpf} já existe!` });
+            return res.status(409).json({ message: `Usuario com esse cpf: ${cpf} já existe!` });
         }
     }
     catch (error) {
@@ -101,7 +101,7 @@ async function findOneCandidato(req: Request, res: Response) {
     try {
         const { id_user } = req.params;
         if (!id_user) {
-            return res.status(404).json({ message: "Digite um id valido!" });
+            return res.status(409).json({ message: "Digite um id valido!" });
         }
         const usuarioExistente = await Candidato.userCandidato.findUnique({ where: { id_user } });
         if (!usuarioExistente) {

@@ -48,10 +48,10 @@ async function CreateEmpresa(req: Request, res: Response) {
             return res.status(201).json(createdEmpresa);
         }
         else if (usuarioExistente || !verificaIe) {
-            return res.status(400).json({ message: "empresa ja existe" });
+            return res.status(409).json({ message: "empresa ja existe" });
         }
         else {
-            return res.status(400).json({ message: "IE ja foi cadastrado" });
+            return res.status(409).json({ message: "IE ja foi cadastrado" });
         }
 
     } catch (error) {
@@ -107,7 +107,7 @@ async function findOneEmpresa(req: Request, res: Response) {
         }
         const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { id_userEmpresa } });
         if (!usuarioExistente) {
-            return res.status(404).json({ message: `Empresa com esse id: ${id_userEmpresa} não existe!` });
+            return res.status(409).json({ message: `Empresa com esse id: ${id_userEmpresa} não existe!` });
         } else {
             return res.status(200).json(usuarioExistente)
         }

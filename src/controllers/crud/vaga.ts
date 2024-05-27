@@ -96,7 +96,7 @@ async function deleteVaga(req: Request, res: Response) {
     try {
         const { id_vaga } = req.params;
         if (!id_vaga) {
-            return res.status(400).json({ message: "Verifique o id na url" });
+            return res.status(409).json({ message: "Verifique o id na url" });
         } else {
             const vagaDeletada = await Vaga.vaga.delete({ where: { id_vaga } })
             return res.status(200).json({ message: "Vaga deletado" });

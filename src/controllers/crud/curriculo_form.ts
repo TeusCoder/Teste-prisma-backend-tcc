@@ -117,7 +117,7 @@ async function deleteCurriculo(req: Request, res: Response) {
     try {
         const { id_curriculoForm } = req.params;
         if (!id_curriculoForm) {
-            return res.status(400).send("Verifique o id na url");
+            return res.status(409).send("Verifique o id na url");
         } else {
             const CvDeletado = await Curriculo.curriculo_form.delete({ where: { id_curriculoForm } })
             return res.status(200).end("CV deletado");

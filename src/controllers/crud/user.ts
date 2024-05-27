@@ -35,7 +35,7 @@ async function createUser(req: Request, res: Response) {
             //retorna o User criado
             return res.status(201).json(createdUser);
         } else {
-            return res.status(400).json({ message: `User com esse email: ${email} já existe!` });
+            return res.status(409).json({ message: `User com esse email: ${email} já existe!` });
         }
     } catch (error) {
         console.log(error);
