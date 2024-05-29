@@ -45,14 +45,14 @@ async function createUser(req: Request, res: Response) {
 //function de atualizar 
 async function updateUser(req: Request, res: Response) {
     try {
-        const { id_user } = req.params;
+        const id_user = req.params.id_user;
         const updateData = req.body;
 
-        const schema = z.object({ 
-            email : z.string().email(),
-            senha : z.string().min(3),
-            tipo : z.string(),
-            status : z.number()
+        const schema = z.object({
+            email: z.string().email(),
+            senha: z.string().min(3),
+            tipo: z.string(),
+            status: z.number()
         }).partial();
 
         const parsedData = schema.safeParse(updateData);
@@ -60,6 +60,16 @@ async function updateUser(req: Request, res: Response) {
             return res.status(400).json({ error: parsedData.error.errors });
         }
 
+        // Verificar se o usuário existe
+        const userExists = await User.user.findUnique({
+            where: { id_user },
+        });
+
+        if (!userExists) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Atualizar o usuário
         const userUpdated = await User.user.update({
             where: { id_user },
             data: parsedData.data,
@@ -69,7 +79,6 @@ async function updateUser(req: Request, res: Response) {
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: 'Erro ao atualizar o user' });
-
     }
 }
 

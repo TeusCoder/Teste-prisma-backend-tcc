@@ -99,12 +99,12 @@ async function findAllCurriculos(req: Request, res: Response) {
 
 async function findOneCurriculo(req: Request, res: Response) {
     try {
-        const { id_curriculoForm } = req.params;
+        const { id_userCandidato } = req.params;
         const CurriculoExistente = await Curriculo.curriculo_form.findFirst({
-            where: { id_curriculoForm }
+            where: { id_userCandidato }
         })
         if (!CurriculoExistente) {
-            return res.status(404).send("CV não encontrado");
+            return res.status(404).json({ message: "Curriculo não encontrado" });
         } else {
             return res.status(200).json(CurriculoExistente)
         }

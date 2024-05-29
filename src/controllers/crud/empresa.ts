@@ -101,13 +101,13 @@ async function findAllEmpresas(req: Request, res: Response) {
 
 async function findOneEmpresa(req: Request, res: Response) {
     try {
-        const { id_userEmpresa } = req.params;
-        if (!id_userEmpresa) {
+        const { id_user } = req.params;
+        if (!id_user) {
             return res.status(404).json({ message: "Digite um id válido!" });
         }
-        const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { id_userEmpresa } });
+        const usuarioExistente = await Empresa.userEmpresa.findUnique({ where: { id_user } });
         if (!usuarioExistente) {
-            return res.status(409).json({ message: `Empresa com esse id: ${id_userEmpresa} não existe!` });
+            return res.status(409).json({ message: `Empresa com esse id: ${id_user} não existe!` });
         } else {
             return res.status(200).json(usuarioExistente)
         }
