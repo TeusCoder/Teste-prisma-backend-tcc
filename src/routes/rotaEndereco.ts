@@ -6,7 +6,7 @@ const route = Router();
 route.post("/", createEndereco)
 route.put("/update/:id_endereco", UpdateEndereco)
 route.get("/findAll", findAllEnderecos)
-route.get("/findOne/:cep",findOneEndereco)
+route.get("/findOne/:id_endereco",findOneEndereco)
 route.delete("/delete/:id_endereco", deleteEndereco)
 
 export default route;

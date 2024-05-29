@@ -64,7 +64,6 @@ model Curriculo_form {
   periodoEstudo String @db.Char(100)
   competenciasExtracurricular String @db.LongText
   certificacoes String @db.LongText
-  curriculo_anexo String? @default("SemCV")
 }
 
 model CandidatoVaga{

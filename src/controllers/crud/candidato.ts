@@ -19,6 +19,9 @@ async function createCandidato(req: Request, res: Response) {
         } = req.body;
         //verificação pelo zod
         candidatoSchema.parse({ id_user, id_endereco, nome, sobrenome, cpf, dataNascimento: new Date(dataNascimento).toISOString(), telefone });
+        if(!candidatoSchema.parse) {
+            return res.status(409).json({message: 'Erro na validação dos dados'});
+        }
         //verificar endereco e /user
         const VerificaEndereco = await Candidato.endereco.findUnique({
             where: { id_endereco }
@@ -74,6 +77,8 @@ async function UpdateCandidato(req: Request, res: Response) {
         if (!parsedData.success) {
             return res.status(400).json({ error: parsedData.error.errors });
         }
+
+        const CandidatoExist = await Candidato.userCandidato.findUnique({where: {id_userCandidato}})
 
         const CandidatoUpdated = await Candidato.userCandidato.update({
             where: { id_userCandidato },

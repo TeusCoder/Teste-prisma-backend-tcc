@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { createCurriculo, deleteCurriculo, findAllCurriculos, findOneCurriculo, updateCurriculo } from "../controllers/crud/curriculo_form";
-import { upload } from "../multerConfig";
 
 const route = Router();
 

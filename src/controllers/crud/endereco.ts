@@ -85,11 +85,11 @@ async function findAllEnderecos(req: Request, res: Response) {
 
 async function findOneEndereco(req: Request, res: Response) {
     try {
-        const { cep } = req.params;
-        if (!cep) {
+        const { id_endereco } = req.params;
+        if (!id_endereco) {
             return res.status(404).json({ message: "digite cep valido" });
         };
-        const EnderecoExistente = await Endereco.endereco.findFirst({ where: { cep } })
+        const EnderecoExistente = await Endereco.endereco.findFirst({ where: { id_endereco } })
         if (!EnderecoExistente) {
             res.status(404).json({ message: "Endereco não existe" });
         } else {

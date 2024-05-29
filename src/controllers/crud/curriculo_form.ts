@@ -67,7 +67,6 @@ async function updateCurriculo(req: Request, res: Response) {
             periodoEstudo: z.string().min(1),
             competenciasExtracurricular: z.string().min(1),
             certificacoes: z.string().min(1),
-            curriculo_anexo: z.string()
         }).partial(); // Torna todos os campos opcionais
 
         const parsedData = schema.safeParse(updateData);
